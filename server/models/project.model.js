@@ -20,7 +20,12 @@ const schema = mongoose.Schema({
       inviteStatus: Boolean,
     },
   ],
-  comment: String,
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment",
+    },
+  ],
   tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Task" }],
 });
 

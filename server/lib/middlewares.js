@@ -15,6 +15,7 @@ const tokenExtractor = async (req, res, next) => {
     "/api/auth/login",
     "/api/auth/register",
     "/api/auth/forgetPassword",
+    "/api/projects",
   ];
 
   if (

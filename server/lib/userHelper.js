@@ -1,4 +1,6 @@
 import User from "../models/user.model.js";
+import jwt from "jsonwebtoken";
+import { SECRET } from "./config.js";
 
 const getTokenFromAuth = (auth) => {
   if (!auth || !auth.startsWith("Bearer ")) {
@@ -7,7 +9,7 @@ const getTokenFromAuth = (auth) => {
   return auth.split(" ")[1];
 };
 
-const getUserByBody = async (body) => {
+const getUserByBody = async (body, res) => {
   const { username, email } = body;
 
   let foundUser;
@@ -24,4 +26,21 @@ const getUserByBody = async (body) => {
   return foundUser;
 };
 
-export { getTokenFromAuth, getUserByBody };
+const getUserByToken = async (token, res) => {
+  const decodedToken = jwt.verify(token, SECRET);
+  const user = await User.findById(decodedToken.user.id);
+
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  return user;
+};
+
+const getToken = (user, expire = true) => {
+  return jwt.sign({ user }, SECRET, {
+    expiresIn: expire ? "1d" : undefined,
+  });
+};
+
+export { getTokenFromAuth, getUserByBody, getUserByToken, getToken };
