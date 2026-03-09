@@ -17,7 +17,7 @@ const schema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
       },
-      inviteStatus: Boolean,
+      inviteStatus: { type: Boolean, default: false },
     },
   ],
   comments: [

@@ -54,3 +54,14 @@ export const sendForgetPasswordEmail = async (receiver, href) => {
     buttonText: "reset password",
   });
 };
+
+export const sendInvitationLink = async (receiver, href) => {
+  await sendEmail({
+    receiver,
+    href,
+    subject: "Project Invitation Link",
+    text: "invitation to project from Task Flow App ",
+    title: "Click on the button to accept invite",
+    buttonText: "Accept Invite",
+  });
+};

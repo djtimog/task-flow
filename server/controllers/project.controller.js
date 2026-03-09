@@ -1,6 +1,7 @@
 import Project from "../models/project.model.js";
-import { getUserByToken } from "../lib/userHelper.js";
-
+import { getToken, getUserByBody, getUserByToken } from "../lib/userHelper.js";
+import { BASE_HREF } from "../lib/config.js";
+const baseUrl = `${BASE_HREF}/api/projects`;
 const createProject = async (req, res) => {
   const { title, description, token } = req.body;
   try {
@@ -88,7 +89,7 @@ const deleteProject = async (req, res) => {
   const { token } = req.body;
   try {
     const user = await getUserByToken(token, res);
-    const project = await Project.findById(id).populate("creator");
+    const project = await Project.findById(id);
     if (!project) {
       return res.status(404).json({ error: "Project not found" });
     }
@@ -97,12 +98,41 @@ const deleteProject = async (req, res) => {
       return res.status(403).json({ error: "Unauthorized" });
     }
 
-    await project.remove();
+    await Project.findByIdAndDelete(id);
     user.projects = user.projects.filter(
       (proj) => proj === project.creator._id,
     );
     await user.save();
     res.status(200).json({ message: "Project deleted" });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+};
+
+const inviteToProject = async (req, res) => {
+  const { id } = req.params;
+  const { token } = req.body;
+  try {
+    const user = await getUserByToken(token, res);
+    const project = await Project.findById(id);
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    if (project.creator._id.toString() !== user._id.toString()) {
+      return res.status(403).json({ error: "Unauthorized" });
+    }
+    const invitedUser = await getUserByBody(req.body, res);
+
+    project.members = [...project.members, { member: invitedUser._id }];
+
+    const invitationToken = getToken(invitedUser, false);
+    await project.save();
+    const href = `${baseUrl}/acceptInvite/${invitationToken}`;
+    await sendInvitationLink(invitedUser.email, href);
+    res
+      .status(200)
+      .json({ message: `Invitation sent to ${invitedUser.email}` });
   } catch (error) {
     res.status(500).json({ error });
   }
@@ -115,4 +145,5 @@ export default {
   deleteProject,
   getProjects,
   editProject,
+  inviteToProject,
 };
