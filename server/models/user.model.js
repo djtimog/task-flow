@@ -16,6 +16,7 @@ const schema = mongoose.Schema({
     required: true,
     minlength: 5,
   },
+  verified: { type: Boolean, default: false },
   projects: [
     {
       type: mongoose.Schema.Types.ObjectId,

@@ -29,21 +29,18 @@ const registerUser = async (req, res) => {
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({ username, password: hashedPassword, email });
 
-    const user = encodeURIComponent(
-      JSON.stringify({
-        username,
-        password: hashedPassword,
-        email,
-      }),
-    );
+    const token = jwt.sign({ username, email }, SECRET);
 
-    const href = `${baseUrl}/register/confirmEmail?user=${user}`;
-
+    const href = `${baseUrl}/register/confirmEmail/${token}`;
     await sendVerificationEmail(email, href);
 
-    res.status(200).json({
-      message: `Email sent to ${email}, click on the link to verify email`,
+    const savedUser = await user.save();
+
+    res.status(201).json({
+      user: savedUser,
+      message: `Email sent to ${email}, please check your email to verify your account`,
     });
   } catch (error) {
     res.status(500).json({ error });
@@ -51,14 +48,22 @@ const registerUser = async (req, res) => {
 };
 
 const confirmEmail = async (req, res) => {
-  const user = JSON.parse(decodeURIComponent(req.query.user));
+  const token = req.params.token;
+
+  const decodedToken = jwt.verify(token, SECRET);
+
+  const { email } = decodedToken;
+
+  const user = await User.findOne({ email });
   if (!user) {
     return res.status(404).json({ error: "user not found" });
   }
-  const newUser = new User(user);
-
+  if (user.verified) {
+    return res.status(400).json({ error: "email already verified" });
+  }
+  user.verified = true;
   try {
-    const savedUser = await newUser.save();
+    const savedUser = await user.save();
     res.status(200).json(savedUser);
   } catch (error) {
     res.status(500).json({ error });

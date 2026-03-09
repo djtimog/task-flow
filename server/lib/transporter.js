@@ -39,7 +39,7 @@ export const sendVerificationEmail = async (receiver, href) => {
     href,
     subject: "Registration Confirm Email",
     text: "Email verification from Task Flow App",
-    title: "Click on the link below to verify email",
+    title: "Click on the button below to verify email",
     buttonText: "confirm email",
   });
 };
@@ -50,7 +50,7 @@ export const sendForgetPasswordEmail = async (receiver, href) => {
     href,
     subject: "Reset Password Link",
     text: "Reset Passwor from Task Flow App",
-    title: "Click on the link below to reset password",
+    title: "Click on the button below to reset password",
     buttonText: "reset password",
   });
 };

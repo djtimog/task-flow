@@ -14,13 +14,13 @@ const tokenExtractor = async (req, res, next) => {
   const tokenUnUsedPath = [
     "/api/auth/login",
     "/api/auth/register",
-    "/api/auth/register/confirmEmail",
     "/api/auth/forgetPassword",
   ];
 
   if (
     !tokenUnUsedPath.includes(path) &&
-    !path.startsWith("/api/auth/resetPassword")
+    !path.startsWith("/api/auth/resetPassword") &&
+    !path.startsWith("/api/auth/register/confirmEmail")
   ) {
     const auth = req.headers["authorization"];
 
