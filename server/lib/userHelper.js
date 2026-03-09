@@ -38,9 +38,12 @@ const getUserByToken = async (token, res) => {
 };
 
 const getToken = (user, expire = true) => {
-  return jwt.sign({ user }, SECRET, {
-    expiresIn: expire ? "1d" : undefined,
-  });
+  if (expire) {
+    return jwt.sign({ user }, SECRET, {
+      expiresIn: "1d",
+    });
+  }
+  return jwt.sign({ user }, SECRET);
 };
 
 export { getTokenFromAuth, getUserByBody, getUserByToken, getToken };

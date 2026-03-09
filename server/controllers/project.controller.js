@@ -1,6 +1,8 @@
 import Project from "../models/project.model.js";
 import { getToken, getUserByBody, getUserByToken } from "../lib/userHelper.js";
 import { BASE_HREF } from "../lib/config.js";
+import { sendInvitationLink } from "../lib/transporter.js";
+
 const baseUrl = `${BASE_HREF}/api/projects`;
 const createProject = async (req, res) => {
   const { title, description, token } = req.body;
@@ -124,15 +126,53 @@ const inviteToProject = async (req, res) => {
     }
     const invitedUser = await getUserByBody(req.body, res);
 
+    const members = project.members.map((member) => member.member.toString());
+    if (
+      members.includes(invitedUser._id.toString()) ||
+      invitedUser._id.toString() === project.creator._id.toString()
+    ) {
+      return res
+        .status(400)
+        .json({ error: "User is already a member of the project" });
+    }
+
     project.members = [...project.members, { member: invitedUser._id }];
 
     const invitationToken = getToken(invitedUser, false);
-    await project.save();
-    const href = `${baseUrl}/acceptInvite/${invitationToken}`;
+
+    const href = `${baseUrl}/${id}/acceptInvite/${invitationToken}`;
     await sendInvitationLink(invitedUser.email, href);
+    await project.save();
     res
       .status(200)
       .json({ message: `Invitation sent to ${invitedUser.email}` });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+};
+
+const acceptInviteToProject = async (req, res) => {
+  const { id, token: invitationToken } = req.params;
+  const { token } = req.body;
+  try {
+    const invitedUser = await getUserByToken(invitationToken, res);
+    const user = await getUserByToken(token, res);
+    if (invitedUser._id.toString() !== user._id.toString()) {
+      return res.status(403).json({ error: "Unauthorized" });
+    }
+    const project = await Project.findById(id);
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    project.members = project.members.map((member) => {
+      if (member.member.toString() === invitedUser._id.toString()) {
+        return { member: member.member, inviteStatus: true };
+      }
+      return member;
+    });
+    await project.save();
+    res.status(200).json({ message: "Invitation accepted" });
   } catch (error) {
     res.status(500).json({ error });
   }
@@ -146,4 +186,5 @@ export default {
   getProjects,
   editProject,
   inviteToProject,
+  acceptInviteToProject,
 };
