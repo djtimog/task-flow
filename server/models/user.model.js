@@ -31,6 +31,12 @@ const schema = mongoose.Schema({
       ref: "Project",
     },
   ],
+  assignedTasks: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Task",
+    },
+  ],
 });
 
 schema.set("toJSON", {

@@ -15,7 +15,7 @@ const schema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Project",
   },
-  status: Boolean,
+  isDone: Boolean,
 });
 
 schema.set("toJSON", {

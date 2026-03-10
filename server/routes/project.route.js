@@ -1,6 +1,8 @@
 import { Router } from "express";
 import projectController from "../controllers/project.controller.js";
 import { projectExtractor } from "../lib/middlewares.js";
+import taskController from "../controllers/task.controller.js";
+import commentController from "../controllers/comment.controller.js";
 
 const router = Router();
 
@@ -15,5 +17,16 @@ router.get(
   "/:id/acceptInvite/:token",
   projectExtractor,
   projectController.acceptInviteToProject,
+);
+router.post("/:id/createTask", projectExtractor, taskController.createTask);
+router.post(
+  "/:id/createComment",
+  projectExtractor,
+  commentController.createComment,
+);
+router.patch(
+  "/:id/updateTaskStatus",
+  projectExtractor,
+  taskController.updateTaskStatus,
 );
 export const projectRouter = router;
