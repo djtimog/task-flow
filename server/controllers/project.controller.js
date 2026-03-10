@@ -5,9 +5,9 @@ import { sendInvitationLink } from "../lib/transporter.js";
 
 const baseUrl = `${BASE_HREF}/api/projects`;
 const createProject = async (req, res) => {
-  const { title, description, token } = req.body;
+  const { title, description } = req.body;
+  const user = req.user;
   try {
-    const user = await getUserByToken(token, res);
     const project = new Project({ title, description, creator: user._id });
     const savedProject = await project.save();
     user.projects = [...user.projects, savedProject._id];
@@ -21,9 +21,8 @@ const createProject = async (req, res) => {
 };
 
 const getAllUserProjects = async (req, res) => {
-  const { token } = req.body;
+  const user = req.user;
   try {
-    const user = await getUserByToken(token, res);
     const projects = await Project.find({ creator: user._id }).populate(
       "creator",
     );
@@ -35,15 +34,8 @@ const getAllUserProjects = async (req, res) => {
 };
 
 const getProjectById = async (req, res) => {
-  const { id } = req.params;
-  const { token } = req.body;
+  const { user, project } = req;
   try {
-    const project = await Project.findById(id).populate("creator");
-    if (!project) {
-      return res.status(404).json({ error: "Project not found" });
-    }
-
-    const user = await getUserByToken(token, res);
     if (project.creator._id.toString() !== user._id.toString()) {
       return res.status(403).json({ error: "Unauthorized" });
     }
@@ -63,15 +55,10 @@ const getProjects = async (req, res) => {
 };
 
 const editProject = async (req, res) => {
-  const { id } = req.params;
-  const { title, description, token } = req.body;
-  try {
-    const user = await getUserByToken(token, res);
-    const project = await Project.findById(id).populate("creator");
-    if (!project) {
-      return res.status(404).json({ error: "Project not found" });
-    }
+  const { user, project } = req;
 
+  const { title, description } = req.body;
+  try {
     if (project.creator._id.toString() !== user._id.toString()) {
       return res.status(403).json({ error: "Unauthorized" });
     }
@@ -87,15 +74,9 @@ const editProject = async (req, res) => {
 };
 
 const deleteProject = async (req, res) => {
-  const { id } = req.params;
-  const { token } = req.body;
-  try {
-    const user = await getUserByToken(token, res);
-    const project = await Project.findById(id);
-    if (!project) {
-      return res.status(404).json({ error: "Project not found" });
-    }
+  const { user, project } = req;
 
+  try {
     if (project.creator._id.toString() !== user._id.toString()) {
       return res.status(403).json({ error: "Unauthorized" });
     }
@@ -112,15 +93,9 @@ const deleteProject = async (req, res) => {
 };
 
 const inviteToProject = async (req, res) => {
-  const { id } = req.params;
-  const { token } = req.body;
-  try {
-    const user = await getUserByToken(token, res);
-    const project = await Project.findById(id);
-    if (!project) {
-      return res.status(404).json({ error: "Project not found" });
-    }
+  const { user, project } = req;
 
+  try {
     if (project.creator._id.toString() !== user._id.toString()) {
       return res.status(403).json({ error: "Unauthorized" });
     }
@@ -152,17 +127,13 @@ const inviteToProject = async (req, res) => {
 };
 
 const acceptInviteToProject = async (req, res) => {
-  const { id, token: invitationToken } = req.params;
-  const { token } = req.body;
+  const { token: invitationToken } = req.params;
+  const { user, project } = req;
+
   try {
     const invitedUser = await getUserByToken(invitationToken, res);
-    const user = await getUserByToken(token, res);
     if (invitedUser._id.toString() !== user._id.toString()) {
       return res.status(403).json({ error: "Unauthorized" });
-    }
-    const project = await Project.findById(id);
-    if (!project) {
-      return res.status(404).json({ error: "Project not found" });
     }
     user.participatingProjects = [...user.participatingProjects, project._id];
     await user.save();
@@ -173,6 +144,7 @@ const acceptInviteToProject = async (req, res) => {
       }
       return member;
     });
+
     await project.save();
     res.status(200).json({ message: "Invitation accepted" });
   } catch (error) {

@@ -5,7 +5,11 @@ import { userRouter } from "./routes/user.route.js";
 import { projectRouter } from "./routes/project.route.js";
 import { authRouter } from "./routes/auth.route.js";
 import cors from "cors";
-import { requestLogger, tokenExtractor } from "./lib/middlewares.js";
+import {
+  requestLogger,
+  tokenExtractor,
+  userExtractor,
+} from "./lib/middlewares.js";
 
 async function main() {
   const app = express();
@@ -15,8 +19,11 @@ async function main() {
   app.use(requestLogger);
 
   app.use("/api/users", userRouter);
+
   app.use(tokenExtractor);
   app.use("/api/auth", authRouter);
+
+  app.use(userExtractor);
   app.use("/api/projects", projectRouter);
 
   await connectToDb(URI);
