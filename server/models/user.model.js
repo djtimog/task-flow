@@ -5,6 +5,7 @@ const schema = mongoose.Schema({
     type: String,
     required: true,
     minlength: 5,
+    unique: true,
   },
   password: {
     type: String,
@@ -15,9 +16,16 @@ const schema = mongoose.Schema({
     type: String,
     required: true,
     minlength: 5,
+    unique: true,
   },
   verified: { type: Boolean, default: false },
   projects: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Project",
+    },
+  ],
+  participatingProjects: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Project",

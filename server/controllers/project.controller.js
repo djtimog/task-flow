@@ -164,6 +164,8 @@ const acceptInviteToProject = async (req, res) => {
     if (!project) {
       return res.status(404).json({ error: "Project not found" });
     }
+    user.participatingProjects = [...user.participatingProjects, project._id];
+    await user.save();
 
     project.members = project.members.map((member) => {
       if (member.member.toString() === invitedUser._id.toString()) {

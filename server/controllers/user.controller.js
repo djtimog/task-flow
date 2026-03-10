@@ -1,3 +1,4 @@
+import { getTokenFromAuth, getUserByToken } from "../lib/userHelper.js";
 import User from "../models/user.model.js";
 
 const getAllUsers = async (req, res) => {
@@ -21,14 +22,26 @@ const getUserById = async (req, res) => {
   }
 };
 
-const updateUser = async (req, res) => {
+const updateProfile = async (req, res) => {
   const id = req.params.id;
-  const body = req.body;
+  const { username } = req.body;
+  const token = getTokenFromAuth(req.headers.authorization);
+
+  if (!token) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  const user = await getUserByToken(token, res);
+  if (user._id.toString() !== id) {
+    console.log(user);
+    return res.status(403).json({ error: "Forbidden" });
+  }
+
   try {
     const user = await User.findByIdAndUpdate(
       id,
-      { $set: { ...body } },
-      { new: true },
+      { $set: { username } },
+      { returnDocument: "after" },
     );
 
     res.status(200).json(user);
@@ -37,4 +50,4 @@ const updateUser = async (req, res) => {
   }
 };
 
-export default { getAllUsers, getUserById, updateUser };
+export default { getAllUsers, getUserById, updateProfile };

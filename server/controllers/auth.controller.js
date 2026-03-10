@@ -35,10 +35,9 @@ const registerUser = async (req, res) => {
     const href = `${baseUrl}/register/confirmEmail/${token}`;
     await sendVerificationEmail(email, href);
 
-    const savedUser = await user.save();
+    await user.save();
 
     res.status(201).json({
-      user: savedUser,
       message: `Email sent to ${email}, please check your email to verify your account`,
     });
   } catch (error) {
