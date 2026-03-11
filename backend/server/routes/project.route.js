@@ -13,7 +13,7 @@ router.get("/:id", projectExtractor, projectController.getProjectById);
 router.put("/:id", projectExtractor, projectController.editProject);
 router.delete("/:id", projectExtractor, projectController.deleteProject);
 router.post("/:id/invite", projectExtractor, projectController.inviteToProject);
-router.get(
+router.post(
   "/:id/acceptInvite/:token",
   projectExtractor,
   projectController.acceptInviteToProject,

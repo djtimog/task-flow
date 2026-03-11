@@ -4,6 +4,7 @@ import { BASE_HREF } from "../lib/config.js";
 import { sendInvitationLink } from "../lib/transporter.js";
 
 const baseUrl = `${BASE_HREF}/api/projects`;
+
 const createProject = async (req, res) => {
   const { title, description } = req.body;
   const user = req.user;

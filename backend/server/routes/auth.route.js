@@ -3,7 +3,7 @@ import authController from "../controllers/auth.controller.js";
 const router = Router();
 
 router.post("/register", authController.registerUser);
-router.get("/register/confirmEmail/:token", authController.confirmEmail);
+router.post("/register/confirmEmail/:token", authController.confirmEmail);
 router.post("/login", authController.loginUser);
 router.post("/logout", authController.logoutUser);
 router.post("/refetchToken", authController.refetchToken);

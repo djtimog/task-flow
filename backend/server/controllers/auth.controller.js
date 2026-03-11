@@ -33,8 +33,9 @@ const registerUser = async (req, res) => {
     const token = getToken(user, false);
 
     const href = `${baseUrl}/register/confirmEmail/${token}`;
+    console.log("i am here");
     await sendVerificationEmail(email, href);
-
+    console.log("i am here");
     await user.save();
 
     res.status(201).json({
@@ -80,7 +81,11 @@ const loginUser = async (req, res) => {
       return res.status(401).json({ error: "Invalid password" });
     }
     await foundUser.populate("projects");
+    await foundUser.populate("assignedTasks");
+    await foundUser.populate("participatingProjects");
+
     const token = getToken(foundUser);
+
     res.status(200).json({ token });
   } catch (error) {
     res.status(500).json({ error });
