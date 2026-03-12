@@ -3,6 +3,8 @@ import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { Link } from "react-router-dom";
+import { route } from "../lib/routes";
 
 export default function HomePage() {
   return (
@@ -21,9 +23,11 @@ export default function HomePage() {
         </p>
 
         <div className="flex items-center gap-3 mt-2">
-          <Button>
-            Get started free <ArrowRight size={16} />
-          </Button>
+          <Link to={route.dashboard.index}>
+            <Button>
+              Get started free <ArrowRight size={16} />
+            </Button>
+          </Link>
           <Button variant={"outline"}>Learn more</Button>
         </div>
 

@@ -4,6 +4,8 @@ import LoginPage from "./pages/auth/LoginPage";
 import SignUpPage from "./pages/auth/SignUpPage";
 import HomePage from "./pages/HomePage";
 import AuthLayout from "./pages/auth/layout";
+import DashboardLayout from "./pages/dashboard/layout";
+import Dashboard from "./pages/dashboard/page";
 
 function App() {
   return (
@@ -15,6 +17,9 @@ function App() {
             <Route path="/auth" element={<AuthLayout />}>
               <Route path="login" element={<LoginPage />} />
               <Route path="signup" element={<SignUpPage />} />
+            </Route>
+            <Route path="/dashboard" element={<DashboardLayout />}>
+              <Route path="" element={<Dashboard />} />
             </Route>
           </Routes>
         </div>
