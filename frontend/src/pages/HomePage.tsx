@@ -1,0 +1,32 @@
+import { ArrowRight } from "lucide-react";
+import { Badge } from "../components/ui/badge";
+import { Button } from "../components/ui/button";
+
+export default function HeroPage() {
+  return (
+    <main className="max-w-5xl mx-auto px-6 pt-40 pb-24 flex flex-col items-center text-center gap-6">
+      <Badge>Task management, simplified</Badge>
+
+      <h1 className="text-5xl font-bold tracking-tight leading-tight max-w-2xl">
+        Everything your team needs to get work done
+      </h1>
+
+      <p className="text-muted-foreground text-lg max-w-xl leading-relaxed">
+        TaskFlow helps your team organize tasks, track progress, and ship faster
+        — all in one clean, focused workspace.
+      </p>
+
+      <div className="flex items-center gap-3 mt-2">
+        <Button>
+          Get started free <ArrowRight size={16} />
+        </Button>
+        <Button variant={"outline"}>Learn more</Button>
+      </div>
+
+      {/* Image placeholder */}
+      <div className="mt-10 w-full max-w-3xl rounded-xl border border-border bg-secondary/40 aspect-video flex items-center justify-center text-muted-foreground text-sm">
+        <span>Your app screenshot here</span>
+      </div>
+    </main>
+  );
+}

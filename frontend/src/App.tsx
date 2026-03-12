@@ -1,9 +1,17 @@
-import "./App.css";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+import HeroPage from "./pages/HomePage";
 
 function App() {
   return (
     <>
-      <div className="bg-blue-500 text-white p-4">Hello, Vite + React!</div>
+      <div>
+        <div className="min-h-screen bg-background text-foreground">
+          <Header />
+          <HeroPage />
+          <Footer />
+        </div>
+      </div>
     </>
   );
 }
