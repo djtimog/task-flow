@@ -7,7 +7,7 @@ import { ArrowLeft } from "lucide-react";
 function AuthLayout() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <div className="container flex justify-between p-7">
+      <div className=" flex justify-between p-7">
         <Link to={route.index}>
           <Button variant={"outline"}>
             <ArrowLeft />
