@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { ModeToggle } from "./ui/mode-toggle";
 import { Menu, X } from "lucide-react";
+import { Link } from "react-router-dom";
+import { route } from "../lib/routes";
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -9,7 +11,6 @@ function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/80 backdrop-blur-sm">
       <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-        {/* Logo */}
         <div className="flex items-center gap-2">
           <img src="/logo.png" alt="Logo" className="h-8" />
           <span className="font-bold text-lg">TaskFlow</span>
@@ -17,8 +18,12 @@ function Header() {
 
         <div className="hidden sm:flex items-center gap-2">
           <ModeToggle />
-          <Button variant="outline">Log in</Button>
-          <Button>Sign up</Button>
+          <Link to={route.auth.login}>
+            <Button variant="outline">Log in</Button>
+          </Link>
+          <Link to={route.auth.signup}>
+            <Button>Sign up</Button>
+          </Link>
         </div>
 
         <div className="flex sm:hidden items-center gap-2">
@@ -35,19 +40,23 @@ function Header() {
 
       {menuOpen && (
         <div className="sm:hidden border-t border-border bg-background px-6 py-4 flex flex-col gap-2">
-          <Button
-            variant="outline"
-            className="w-full"
-            onClick={() => setMenuOpen(false)}
-          >
-            Log in
-          </Button>
-          <Button
-            className="w-full text-primary-foreground"
-            onClick={() => setMenuOpen(false)}
-          >
-            Sign up
-          </Button>
+          <Link to={route.auth.login}>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => setMenuOpen(false)}
+            >
+              Log in
+            </Button>
+          </Link>
+          <Link to={route.auth.signup}>
+            <Button
+              className="w-full text-primary-foreground"
+              onClick={() => setMenuOpen(false)}
+            >
+              Sign up
+            </Button>
+          </Link>
         </div>
       )}
     </header>

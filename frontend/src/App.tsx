@@ -1,15 +1,22 @@
-import Footer from "./components/Footer";
-import Header from "./components/Header";
-import HeroPage from "./pages/HomePage";
+import { Route, Routes } from "react-router-dom";
+
+import LoginPage from "./pages/auth/LoginPage";
+import SignUpPage from "./pages/auth/SignUpPage";
+import HomePage from "./pages/HomePage";
+import AuthLayout from "./pages/auth/layout";
 
 function App() {
   return (
     <>
       <div>
         <div className="min-h-screen bg-background text-foreground">
-          <Header />
-          <HeroPage />
-          <Footer />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/auth" element={<AuthLayout />}>
+              <Route path="login" element={<LoginPage />} />
+              <Route path="signup" element={<SignUpPage />} />
+            </Route>
+          </Routes>
         </div>
       </div>
     </>
