@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import { SidebarProvider } from "../../components/ui/sidebar";
 import { AppSidebar } from "../../components/app-sidebar";
 import { TooltipProvider } from "../../components/ui/tooltip";
-import DashboardHeader from "../../components/dashboard-header";
+import DashboardHeader from "../../components/dashboard/dashboard-header";
 
 function DashboardLayout() {
   return (

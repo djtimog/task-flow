@@ -7,6 +7,8 @@ import AuthLayout from "./pages/auth/layout";
 import DashboardLayout from "./pages/dashboard/layout";
 import Dashboard from "./pages/dashboard/page";
 import Profile from "./pages/dashboard/profile";
+import ProjectPage from "./pages/dashboard/project";
+import NotificationsPage from "./pages/dashboard/notification";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
             <Route path="/dashboard" element={<DashboardLayout />}>
               <Route path="" element={<Dashboard />} />
               <Route path="profile" element={<Profile />} />
+              <Route path="notification" element={<NotificationsPage />} />
+              <Route path="project/:id" element={<ProjectPage />} />
             </Route>
           </Routes>
         </div>

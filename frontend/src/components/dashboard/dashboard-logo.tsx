@@ -1,7 +1,7 @@
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "./ui/sidebar";
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
 
 import { Link } from "react-router-dom";
-import { route } from "../lib/routes";
+import { route } from "../../lib/routes";
 
 export function DashboardLogo() {
   return (

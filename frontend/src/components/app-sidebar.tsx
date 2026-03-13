@@ -19,8 +19,9 @@ import {
   FrameIcon,
   PieChartIcon,
   MapIcon,
+  Bell,
 } from "lucide-react";
-import { DashboardLogo } from "./dashboard-logo";
+import { DashboardLogo } from "./dashboard/dashboard-logo";
 import { NavProjects } from "./nav-projects";
 
 const data = {
@@ -40,6 +41,11 @@ const data = {
       title: "Profile",
       url: "/dashboard/profile",
       icon: <User />,
+    },
+    {
+      title: "Notification",
+      url: "/dashboard/notification",
+      icon: <Bell />,
     },
   ],
   projects: [

@@ -6,5 +6,6 @@ export const route = {
   },
   dashboard: {
     index: "/dashboard",
+    notification: "/dashboard/notification",
   },
 };

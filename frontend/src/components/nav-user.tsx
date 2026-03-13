@@ -16,9 +16,8 @@ import {
 } from "./../components/ui/sidebar";
 import {
   ChevronsUpDownIcon,
-  SparklesIcon,
   BadgeCheckIcon,
-  CreditCardIcon,
+  ClipboardListIcon,
   BellIcon,
   LogOutIcon,
 } from "lucide-react";
@@ -75,19 +74,12 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <SparklesIcon />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
                 <BadgeCheckIcon />
                 Account
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <CreditCardIcon />
-                Billing
+                <ClipboardListIcon />
+                Projects
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <BellIcon />
