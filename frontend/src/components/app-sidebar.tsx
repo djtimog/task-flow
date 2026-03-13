@@ -38,7 +38,7 @@ const data = {
 
     {
       title: "Profile",
-      url: "/profile",
+      url: "/dashboard/profile",
       icon: <User />,
     },
   ],

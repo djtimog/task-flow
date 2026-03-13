@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -25,12 +26,14 @@ export function NavMain({
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
-          <SidebarMenuItem>
-            <SidebarMenuButton tooltip={item.title}>
-              {item.icon}
-              <span>{item.title}</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+          <Link to={item.url} key={item.title}>
+            <SidebarMenuItem>
+              <SidebarMenuButton tooltip={item.title}>
+                {item.icon}
+                <span>{item.title}</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </Link>
         ))}
       </SidebarMenu>
     </SidebarGroup>

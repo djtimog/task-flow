@@ -6,6 +6,7 @@ import HomePage from "./pages/HomePage";
 import AuthLayout from "./pages/auth/layout";
 import DashboardLayout from "./pages/dashboard/layout";
 import Dashboard from "./pages/dashboard/page";
+import Profile from "./pages/dashboard/profile";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             </Route>
             <Route path="/dashboard" element={<DashboardLayout />}>
               <Route path="" element={<Dashboard />} />
+              <Route path="profile" element={<Profile />} />
             </Route>
           </Routes>
         </div>
