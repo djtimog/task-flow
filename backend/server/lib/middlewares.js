@@ -26,7 +26,6 @@ const tokenExtractor = async (req, res, next) => {
     !path.startsWith("/api/auth/register/confirmEmail")
   ) {
     const auth = req.headers["authorization"];
-
     if (!auth) {
       return res.status(401).json({ error: "No authorization header" });
     }

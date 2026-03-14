@@ -9,8 +9,18 @@ import Dashboard from "./pages/dashboard/page";
 import Profile from "./pages/dashboard/profile";
 import ProjectPage from "./pages/dashboard/project";
 import NotificationsPage from "./pages/dashboard/notification";
+import ConfirmEmail from "./pages/auth/ConfirmEmail";
+import ConfirmEmailVerified from "./pages/auth/ConfrimEmailVerified";
+import { useEffect } from "react";
+import { getUser } from "./reducers/user.reducer";
+import { useDispatch } from "react-redux";
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    getUser(dispatch);
+  }, [dispatch]);
   return (
     <>
       <div>
@@ -20,6 +30,11 @@ function App() {
             <Route path="/auth" element={<AuthLayout />}>
               <Route path="login" element={<LoginPage />} />
               <Route path="signup" element={<SignUpPage />} />
+              <Route
+                path="register/confirmEmail/:token"
+                element={<ConfirmEmailVerified />}
+              />
+              <Route path="register/confirmEmail" element={<ConfirmEmail />} />
             </Route>
             <Route path="/dashboard" element={<DashboardLayout />}>
               <Route path="" element={<Dashboard />} />

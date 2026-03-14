@@ -7,7 +7,7 @@ import {
 } from "../lib/transporter.js";
 import { getToken, getUserByBody, getUserByToken } from "../lib/userHelper.js";
 
-const baseUrl = `${BASE_HREF}/api/auth`;
+const baseUrl = `${BASE_HREF}/auth`;
 
 const registerUser = async (req, res) => {
   const { username, password, email } = req.body;
@@ -33,9 +33,7 @@ const registerUser = async (req, res) => {
     const token = getToken(user, false);
 
     const href = `${baseUrl}/register/confirmEmail/${token}`;
-    console.log("i am here");
     await sendVerificationEmail(email, href);
-    console.log("i am here");
     await user.save();
 
     res.status(201).json({
@@ -86,7 +84,14 @@ const loginUser = async (req, res) => {
 
     const token = getToken(foundUser);
 
-    res.status(200).json({ token });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.status(200).json({ user: foundUser });
   } catch (error) {
     res.status(500).json({ error });
   }
