@@ -22,6 +22,8 @@ import {
 } from "lucide-react";
 import { useAppSelector } from "../hooks/use-app-selector";
 import { LogOutButton } from "./dashboard/logout-buuton";
+import { Link } from "react-router-dom";
+import { route } from "../lib/routes";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
@@ -70,18 +72,24 @@ export function NavUser() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheckIcon />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <ClipboardListIcon />
-                Projects
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <BellIcon />
-                Notifications
-              </DropdownMenuItem>
+              <Link to={route.dashboard.profile}>
+                <DropdownMenuItem>
+                  <BadgeCheckIcon />
+                  Account
+                </DropdownMenuItem>
+              </Link>
+              <Link to={route.dashboard.index}>
+                <DropdownMenuItem>
+                  <ClipboardListIcon />
+                  Projects
+                </DropdownMenuItem>
+              </Link>
+              <Link to={route.dashboard.notification}>
+                <DropdownMenuItem>
+                  <BellIcon />
+                  Notifications
+                </DropdownMenuItem>
+              </Link>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem>

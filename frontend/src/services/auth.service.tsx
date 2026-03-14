@@ -1,22 +1,18 @@
 import axios from "axios";
 import { toast } from "sonner";
 import type { LoginValues, RegisterValues } from "../lib/zod-tools";
-const baseUrl = "/api/auth";
+import { getAuthHeader } from "../lib/auth";
+
+const baseUrl = `/api/auth`;
 
 export const registerUser = async (data: RegisterValues) => {
-  const userData = {
-    username: data.username,
-    password: data.password,
-    email: data.email,
-  };
-
   try {
-    const result = await axios.post(`${baseUrl}/register`, userData);
-    toast.success("Check your Email to confirm Email");
+    const result = await axios.post(`${baseUrl}/register`, data);
+    toast.success("Account created successfully");
     return result.data;
   } catch (error: any) {
-    toast.error(`Registration failed. ${error.response.data.error}`);
-    throw new Error(`Registration failed: ${error}`);
+    toast.error(`${error.response.data.error}`);
+    throw new Error("Registration failed");
   }
 };
 
@@ -25,12 +21,11 @@ export const registerConfirmEmail = async (token: string) => {
     const result = await axios.post(
       `${baseUrl}/register/confirmEmail/${token}`,
     );
-
-    toast.success("Email confirm succesfully");
+    toast.success("Email confirmed successfully");
     return result.data;
   } catch (error: any) {
-    toast(`${error.response.data.error}`);
-    throw new Error(`Email confirmation Failed`);
+    toast.error(`${error.response.data.error}`);
+    throw new Error("Email confirmation failed");
   }
 };
 
@@ -38,7 +33,7 @@ export const loginUser = async (data: LoginValues) => {
   try {
     const { method, ...payload } = data;
     const result = await axios.post(`${baseUrl}/login`, payload);
-    toast.success(`Logged via ${method} is successfully`);
+    toast.success(`Logged in successfully via ${method}`);
     return result.data;
   } catch (error: any) {
     toast.error(`${error.response.data.error}`);
@@ -46,19 +41,49 @@ export const loginUser = async (data: LoginValues) => {
   }
 };
 
-export const logOutUser = async () => {
+export const logoutUser = async () => {
   try {
-    const token = localStorage.getItem("token");
-    const result = await axios.post(`${baseUrl}/auth/logout`, undefined, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    const result = await axios.post(`${baseUrl}/logout`, {
+      headers: getAuthHeader(),
     });
-
-    toast.success("Log out succesfully");
+    toast.success("Logged out successfully");
     return result.data;
   } catch (error: any) {
     toast.error(`${error.response.data.error}`);
-    throw new Error("Login failed");
+    throw new Error("Logout failed");
+  }
+};
+
+export const refetchToken = async () => {
+  try {
+    const result = await axios.post(`${baseUrl}/refetchToken`);
+    return result.data;
+  } catch (error: any) {
+    toast.error(`${error.response.data.error}`);
+    throw new Error("Token refresh failed");
+  }
+};
+
+export const forgetPassword = async (email: string) => {
+  try {
+    const result = await axios.post(`${baseUrl}/forgetPassword`, { email });
+    toast.success("Password reset email sent");
+    return result.data;
+  } catch (error: any) {
+    toast.error(`${error.response.data.error}`);
+    throw new Error("Forgot password failed");
+  }
+};
+
+export const resetPassword = async (token: string, password: string) => {
+  try {
+    const result = await axios.post(`${baseUrl}/resetPassword/${token}`, {
+      password,
+    });
+    toast.success("Password reset successfully");
+    return result.data;
+  } catch (error: any) {
+    toast.error(`${error.response.data.error}`);
+    throw new Error("Password reset failed");
   }
 };

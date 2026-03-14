@@ -14,6 +14,7 @@ import ConfirmEmailVerified from "./pages/auth/ConfrimEmailVerified";
 import { useEffect } from "react";
 import { getUser } from "./reducers/user.reducer";
 import { useDispatch } from "react-redux";
+import SettingsPage from "./pages/dashboard/settings";
 
 function App() {
   const dispatch = useDispatch();
@@ -40,6 +41,7 @@ function App() {
               <Route path="" element={<Dashboard />} />
               <Route path="profile" element={<Profile />} />
               <Route path="notification" element={<NotificationsPage />} />
+              <Route path="settings" element={<SettingsPage />} />
               <Route path="project/:id" element={<ProjectPage />} />
             </Route>
           </Routes>

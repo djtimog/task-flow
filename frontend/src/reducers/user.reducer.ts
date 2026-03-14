@@ -13,6 +13,9 @@ export const userSlice = createSlice({
   reducers: {
     setUser: (_, action: PayloadAction<UserType>) => action.payload,
     clearUser: () => null,
+    // updateUserProject: () => action
+
+    //add a upate user project function
   },
 });
 

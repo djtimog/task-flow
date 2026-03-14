@@ -23,15 +23,7 @@ import {
   Trash2Icon,
 } from "lucide-react";
 
-export function NavProjects({
-  projects,
-}: {
-  projects: {
-    name: string;
-    url: string;
-    icon: React.ReactNode;
-  }[];
-}) {
+export function NavProjects({ projects }: { projects: string[] }) {
   const { isMobile } = useSidebar();
 
   return (
@@ -39,11 +31,10 @@ export function NavProjects({
       <SidebarGroupLabel>Projects</SidebarGroupLabel>
       <SidebarMenu>
         {projects.map((item) => (
-          <SidebarMenuItem key={item.name}>
+          <SidebarMenuItem key={item}>
             <SidebarMenuButton asChild>
-              <a href={item.url}>
-                {item.icon}
-                <span>{item.name}</span>
+              <a href={`/dashboard/projects/${item}`}>
+                <span>{item}</span>
               </a>
             </SidebarMenuButton>
             <DropdownMenu>

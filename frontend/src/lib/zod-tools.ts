@@ -33,8 +33,15 @@ const LoginUser = z.discriminatedUnion("method", [
     password: z.string(),
   }),
 ]);
+const CreateProject = z.object({
+  title: z.string().min(3, "Title must be at least 3 characters long"),
+  description: z
+    .string()
+    .min(3, "Description must be at least 3 characters long"),
+});
 
-export const ZodSchemas = { RegisterUser, LoginUser };
+export const ZodSchemas = { RegisterUser, LoginUser, CreateProject };
 
 export type RegisterValues = z.infer<typeof ZodSchemas.RegisterUser>;
 export type LoginValues = z.infer<typeof ZodSchemas.LoginUser>;
+export type CreateProjectValues = z.infer<typeof ZodSchemas.CreateProject>;

@@ -8,7 +8,7 @@ export const route = {
   dashboard: {
     index: "/dashboard",
     notification: "/dashboard/notification",
-    profile: "dashboard/profile",
-    settings: "dashboard/profile",
+    profile: "/dashboard/profile",
+    settings: "/dashboard/settings",
   },
 };

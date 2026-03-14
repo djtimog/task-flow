@@ -13,16 +13,10 @@ import {
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 
-import {
-  LayoutDashboard,
-  User,
-  FrameIcon,
-  PieChartIcon,
-  MapIcon,
-  Bell,
-} from "lucide-react";
+import { LayoutDashboard, User, Bell, Settings } from "lucide-react";
 import { DashboardLogo } from "./dashboard/dashboard-logo";
 import { NavProjects } from "./nav-projects";
+import { useAppSelector } from "../hooks/use-app-selector";
 
 const data = {
   user: {
@@ -47,15 +41,17 @@ const data = {
       url: "/dashboard/notification",
       icon: <Bell />,
     },
-  ],
-  projects: [
-    { name: "Design Engineering", url: "#", icon: <FrameIcon /> },
-    { name: "Sales & Marketing", url: "#", icon: <PieChartIcon /> },
-    { name: "Travel", url: "#", icon: <MapIcon /> },
+    {
+      title: "Settings",
+      url: "/dashboard/settings",
+      icon: <Settings />,
+    },
   ],
 };
 
 export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
+  const user = useAppSelector((root) => root.user);
+  if (!user) return null;
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -63,7 +59,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        {user.projects.length > 0 && <NavProjects projects={user.projects} />}
       </SidebarContent>
 
       <SidebarFooter>
