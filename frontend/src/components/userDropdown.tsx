@@ -56,7 +56,7 @@ export const UserDropdown = ({ avatarName }: { avatarName: string }) => {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <LogOutButton icon />
+            <LogOutButton />
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

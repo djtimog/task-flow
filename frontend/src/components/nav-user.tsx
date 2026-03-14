@@ -85,7 +85,7 @@ export function NavUser() {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <LogOutButton />
+              <LogOutButton icon />
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
