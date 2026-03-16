@@ -1,13 +1,12 @@
-import api from "../lib/api";
 import { toast } from "sonner";
 import type { CreateProjectValues } from "../lib/zod-tools";
+import axios from "axios";
 
 const baseUrl = "/projects";
 
-// GET /projects
 export const getProjects = async () => {
   try {
-    const result = await api.get(baseUrl);
+    const result = await axios.get(baseUrl);
     return result.data;
   } catch (error: any) {
     toast.error(`${error.response.data.error}`);
@@ -15,10 +14,9 @@ export const getProjects = async () => {
   }
 };
 
-// GET /projects/getUserProjects
 export const getUserProjects = async () => {
   try {
-    const result = await api.get(`${baseUrl}/getUserProjects`);
+    const result = await axios.get(`${baseUrl}/getUserProjects`);
     return result.data;
   } catch (error: any) {
     toast.error(`${error.response.data.error}`);
@@ -26,10 +24,9 @@ export const getUserProjects = async () => {
   }
 };
 
-// GET /projects/:id
 export const getProjectById = async (id: string) => {
   try {
-    const result = await api.get(`${baseUrl}/${id}`);
+    const result = await axios.get(`${baseUrl}/${id}`);
     return result.data;
   } catch (error: any) {
     toast.error(`${error.response.data.error}`);
@@ -37,10 +34,9 @@ export const getProjectById = async (id: string) => {
   }
 };
 
-// POST /projects/createProject
 export const createProject = async (data: CreateProjectValues) => {
   try {
-    const result = await api.post(`${baseUrl}/createProject`, data);
+    const result = await axios.post(`${baseUrl}/createProject`, data);
     toast.success("Project created successfully");
     return result.data;
   } catch (error: any) {
@@ -49,13 +45,12 @@ export const createProject = async (data: CreateProjectValues) => {
   }
 };
 
-// PUT /projects/:id
 export const editProject = async (
   id: string,
   data: Partial<CreateProjectValues>,
 ) => {
   try {
-    const result = await api.put(`${baseUrl}/${id}`, data);
+    const result = await axios.put(`${baseUrl}/${id}`, data);
     toast.success("Project updated successfully");
     return result.data;
   } catch (error: any) {
@@ -64,10 +59,9 @@ export const editProject = async (
   }
 };
 
-// DELETE /projects/:id
 export const deleteProject = async (id: string) => {
   try {
-    const result = await api.delete(`${baseUrl}/${id}`);
+    const result = await axios.delete(`${baseUrl}/${id}`);
     toast.success("Project deleted successfully");
     return result.data;
   } catch (error: any) {
@@ -76,10 +70,9 @@ export const deleteProject = async (id: string) => {
   }
 };
 
-// POST /projects/:id/invite
 export const inviteToProject = async (id: string, email: string) => {
   try {
-    const result = await api.post(`${baseUrl}/${id}/invite`, { email });
+    const result = await axios.post(`${baseUrl}/${id}/invite`, { email });
     toast.success("Invite sent successfully");
     return result.data;
   } catch (error: any) {
@@ -88,10 +81,9 @@ export const inviteToProject = async (id: string, email: string) => {
   }
 };
 
-// POST /projects/:id/acceptInvite/:token
 export const acceptInvite = async (id: string, token: string) => {
   try {
-    const result = await api.post(`${baseUrl}/${id}/acceptInvite/${token}`);
+    const result = await axios.post(`${baseUrl}/${id}/acceptInvite/${token}`);
     toast.success("Invite accepted successfully");
     return result.data;
   } catch (error: any) {
@@ -100,13 +92,12 @@ export const acceptInvite = async (id: string, token: string) => {
   }
 };
 
-// POST /projects/:id/createTask
 export const createTask = async (
   id: string,
   data: { title: string; description?: string },
 ) => {
   try {
-    const result = await api.post(`${baseUrl}/${id}/createTask`, data);
+    const result = await axios.post(`${baseUrl}/${id}/createTask`, data);
     toast.success("Task created successfully");
     return result.data;
   } catch (error: any) {
@@ -115,10 +106,9 @@ export const createTask = async (
   }
 };
 
-// POST /projects/:id/createComment
 export const createComment = async (id: string, data: { content: string }) => {
   try {
-    const result = await api.post(`${baseUrl}/${id}/createComment`, data);
+    const result = await axios.post(`${baseUrl}/${id}/createComment`, data);
     toast.success("Comment added");
     return result.data;
   } catch (error: any) {
@@ -127,13 +117,12 @@ export const createComment = async (id: string, data: { content: string }) => {
   }
 };
 
-// PATCH /projects/:id/updateTaskStatus
 export const updateTaskStatus = async (
   id: string,
   data: { taskId: string; status: string },
 ) => {
   try {
-    const result = await api.patch(`${baseUrl}/${id}/updateTaskStatus`, data);
+    const result = await axios.patch(`${baseUrl}/${id}/updateTaskStatus`, data);
     toast.success("Task status updated");
     return result.data;
   } catch (error: any) {

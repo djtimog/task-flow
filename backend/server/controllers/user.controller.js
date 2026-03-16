@@ -5,6 +5,9 @@ const getAllUsers = async (req, res) => {
   try {
     const users = await User.find({});
     res.status(200).json(users);
+    await foundUser.populate("projects");
+    await foundUser.populate("assignedTasks");
+    await foundUser.populate("participatingProjects");
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -14,6 +17,9 @@ const getUserById = async (req, res) => {
   const id = req.params.id;
   try {
     const user = await User.findById(id);
+    await foundUser.populate("projects");
+    await foundUser.populate("assignedTasks");
+    await foundUser.populate("participatingProjects");
     res.status(200).json(user);
   } catch (error) {
     res

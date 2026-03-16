@@ -5,15 +5,9 @@ import {
   CardTitle,
 } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
+import type { UserType } from "../../lib/type";
 
-const tasks = [
-  { title: "Design login page", status: "In Progress" },
-  { title: "Connect backend API", status: "Todo" },
-  { title: "Setup database", status: "Done" },
-  { title: "Create project UI", status: "In Progress" },
-];
-
-export default function TaskList() {
+export default function TaskList({ user }: { user: UserType }) {
   return (
     <Card>
       <CardHeader>
@@ -21,15 +15,19 @@ export default function TaskList() {
       </CardHeader>
 
       <CardContent className="space-y-3">
-        {tasks.map((task) => (
-          <div
-            key={task.title}
-            className="flex justify-between border p-3 rounded-lg"
-          >
-            <p>{task.title}</p>
-            <Badge>{task.status}</Badge>
-          </div>
-        ))}
+        {user.assignedTasks.length > 0 ? (
+          user.assignedTasks.map((task) => (
+            <div
+              key={task.title}
+              className="flex justify-between border p-3 rounded-lg"
+            >
+              <p>{task.title}</p>
+              <Badge>{task.isDone ? "Finished" : "Pending"}</Badge>
+            </div>
+          ))
+        ) : (
+          <div>{/* a create tasks button */}</div>
+        )}
       </CardContent>
     </Card>
   );

@@ -4,15 +4,21 @@ import {
   CardHeader,
   CardTitle,
 } from "../../components/ui/card";
+import type { UserType } from "../../lib/type";
 
-const stats = [
-  { title: "Total Projects", value: 8 },
-  { title: "Active Tasks", value: 24 },
-  { title: "Completed Tasks", value: 96 },
-  { title: "Team Members", value: 12 },
-];
-
-export default function StatsCards() {
+export default function StatsCards({ user }: { user: UserType }) {
+  const completedTasks = user.assignedTasks.filter(
+    (tasks) => tasks.isDone === true,
+  );
+  const stats = [
+    { title: "Total Projects", value: user.projects.length },
+    { title: "Active Tasks", value: user.assignedTasks.length },
+    { title: "Completed Tasks", value: completedTasks.length },
+    {
+      title: "Participating Projects",
+      value: user.participatingProjects.length,
+    },
+  ];
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {stats.map((stat) => (

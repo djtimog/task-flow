@@ -22,12 +22,12 @@ function Dashboard() {
 
       {user.projects.length > 0 ? (
         <>
-          <StatsCards />
+          <StatsCards user={user} />
 
           <div className="grid gap-6 lg:grid-cols-3">
             <div className="lg:col-span-2 space-y-6">
-              <ProjectList />
-              <TaskList />
+              <ProjectList user={user} />
+              <TaskList user={user} />
             </div>
 
             <ActivityFeed />

@@ -1,6 +1,6 @@
 import { LogOutIcon } from "lucide-react";
 import { Button } from "../ui/button";
-import { logOutUser } from "../../services/auth.service";
+import { logoutUser } from "../../services/auth.service";
 import { useDispatch } from "react-redux";
 import { removeUser } from "../../reducers/user.reducer";
 import { toast } from "sonner";
@@ -9,7 +9,7 @@ export function LogOutButton({ icon }: { icon?: boolean }) {
   const dispatch = useDispatch();
   const logout = async () => {
     try {
-      await logOutUser();
+      await logoutUser();
       removeUser(dispatch);
     } catch (error) {
       console.log(error);

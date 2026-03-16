@@ -2,6 +2,8 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { jwtDecode } from "jwt-decode";
 import type { AppDispatch } from "../lib/store";
 import { type UserType } from "../lib/type";
+import { getUserById } from "../services/user.service";
+import { userExtractor } from "../lib/token";
 
 type UserState = UserType | null;
 
@@ -29,10 +31,8 @@ const initializeUser = (token: string, dispatch: AppDispatch) => {
 };
 
 const getUser = (dispatch: AppDispatch) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    const { user }: { user: UserType; iat: number; exp: number } =
-      jwtDecode(token);
+  const user = userExtractor();
+  if (user) {
     dispatch(setUser(user));
   }
 };
@@ -42,6 +42,17 @@ const removeUser = (dispatch: AppDispatch) => {
   dispatch(clearUser());
 };
 
-export { initializeUser, getUser, removeUser };
+const refetchUser = async (user: UserType | null, dispatch: AppDispatch) => {
+  const tokenUser = user;
+  if (tokenUser) {
+    const user: UserType = await getUserById(tokenUser.id);
+
+    if (JSON.stringify(user) === JSON.stringify(tokenUser)) return null;
+
+    dispatch({ type: "User/setUser", payload: user });
+  }
+};
+
+export { initializeUser, getUser, removeUser, refetchUser };
 
 export default userSlice.reducer;

@@ -4,26 +4,9 @@ import {
   CardHeader,
   CardTitle,
 } from "../../components/ui/card";
+import type { UserType } from "../../lib/type";
 
-const projects = [
-  {
-    name: "Mobile App",
-    description: "Develop the new company mobile app",
-    members: 5,
-  },
-  {
-    name: "Website Redesign",
-    description: "Improve landing page and UI",
-    members: 3,
-  },
-  {
-    name: "Marketing Campaign",
-    description: "Prepare launch campaign",
-    members: 4,
-  },
-];
-
-export default function ProjectList() {
+export default function ProjectList({ user }: { user: UserType }) {
   return (
     <Card>
       <CardHeader>
@@ -31,23 +14,24 @@ export default function ProjectList() {
       </CardHeader>
 
       <CardContent className="space-y-4">
-        {projects.map((project) => (
-          <div
-            key={project.name}
-            className="flex justify-between items-center border p-3 rounded-lg"
-          >
-            <div>
-              <p className="font-medium">{project.name}</p>
-              <p className="text-sm text-muted-foreground">
-                {project.description}
-              </p>
-            </div>
+        {user.projects.length > 0 &&
+          user.projects.map((project) => (
+            <div
+              key={project.id}
+              className="flex justify-between items-center border p-3 rounded-lg"
+            >
+              <div>
+                <p className="font-medium">{project.title}</p>
+                <p className="text-sm text-muted-foreground">
+                  {project.description}
+                </p>
+              </div>
 
-            <span className="text-sm text-muted-foreground">
-              {project.members} members
-            </span>
-          </div>
-        ))}
+              <span className="text-sm text-muted-foreground">
+                {project.members.length} members
+              </span>
+            </div>
+          ))}
       </CardContent>
     </Card>
   );
