@@ -15,6 +15,9 @@ const createProject = async (req, res) => {
     await user.save();
 
     await savedProject.populate("creator");
+    await savedProject.populate("tasks");
+    await savedProject.populate("member");
+    await savedProject.populate("comments");
     res.status(201).json({ message: "Project created", data: savedProject });
   } catch (error) {
     res.status(500).json({ error });
@@ -27,7 +30,10 @@ const getAllUserProjects = async (req, res) => {
     const projects = await Project.find({ creator: user._id }).populate(
       "creator",
     );
-
+    await projects.populate("creator");
+    await projects.populate("tasks");
+    await projects.populate("member");
+    await projects.populate("comments");
     res.status(200).json({ data: projects });
   } catch (error) {
     res.status(500).json({ error });
@@ -40,6 +46,10 @@ const getProjectById = async (req, res) => {
     if (project.creator._id.toString() !== user._id.toString()) {
       return res.status(403).json({ error: "Unauthorized" });
     }
+    await project.populate("creator");
+    await project.populate("tasks");
+    await project.populate("member");
+    await project.populate("comments");
     res.status(200).json({ data: project });
   } catch (error) {
     res.status(500).json({ error });
@@ -49,6 +59,10 @@ const getProjectById = async (req, res) => {
 const getProjects = async (req, res) => {
   try {
     const projects = await Project.find().populate("creator");
+    await projects.populate("creator");
+    await projects.populate("tasks");
+    await projects.populate("member");
+    await projects.populate("comments");
     res.status(200).json({ data: projects });
   } catch (error) {
     res.status(500).json({ error });
@@ -68,6 +82,10 @@ const editProject = async (req, res) => {
     project.description = description || project.description;
 
     const updatedProject = await project.save();
+    await updatedProject.populate("creator");
+    await updatedProject.populate("tasks");
+    await updatedProject.populate("member");
+    await updatedProject.populate("comments");
     res.status(200).json({ message: "Project updated", data: updatedProject });
   } catch (error) {
     res.status(500).json({ error });
@@ -87,6 +105,7 @@ const deleteProject = async (req, res) => {
       (proj) => proj === project.creator._id,
     );
     await user.save();
+
     res.status(200).json({ message: "Project deleted" });
   } catch (error) {
     res.status(500).json({ error });

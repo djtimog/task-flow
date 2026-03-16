@@ -104,7 +104,9 @@ const refetchToken = async (req, res) => {
   const { token } = req.body;
 
   const user = await getUserByToken(token, res);
-
+  await user.populate("projects");
+  await user.populate("assignedTasks");
+  await user.populate("participatingProjects");
   const newToken = getToken(user);
 
   res.status(200).json({ newToken });
