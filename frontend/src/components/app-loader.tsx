@@ -6,11 +6,10 @@ export default function AppLoader() {
         <h1 className="text-xl font-bold tracking-tight">TaskFlow</h1>
       </div>
       <div className="flex items-center gap-1.5">
-        {Array(3).map((i) => (
+        {[1, 2, 3].map((i) => (
           <span
             key={i}
-            className="w-2 h-2 rounded-full bg-primary animate-bounce"
-            style={{ animationDelay: `${i * 0.15}s` }}
+            className={`w-2 h-2 rounded-full bg-primary animate-bounce delay-${i * 1000}`}
           />
         ))}
       </div>
