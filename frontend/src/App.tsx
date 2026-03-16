@@ -17,6 +17,7 @@ import { useDispatch } from "react-redux";
 import SettingsPage from "./pages/dashboard/settings";
 import { useQuery } from "@tanstack/react-query";
 import { useAppSelector } from "./hooks/use-app-selector";
+import AppLoader from "./components/app-loader";
 
 function App() {
   const dispatch = useDispatch();
@@ -30,7 +31,7 @@ function App() {
     queryKey: ["User"],
     queryFn: () => {
       if (user) {
-        refetchUser(user, dispatch);
+        refetchUser(dispatch);
       }
       return null;
     },
@@ -65,7 +66,7 @@ function App() {
               </Route>
             </Routes>
           ) : (
-            <div>Loading... * a loading component</div>
+            <AppLoader />
           )}
         </div>
       </div>

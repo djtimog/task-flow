@@ -19,10 +19,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ZodSchemas, type CreateProjectValues } from "../../lib/zod-tools";
 import { createProject } from "../../services/project.service";
 import { useMutation } from "@tanstack/react-query";
+import { useDispatch } from "react-redux";
+import { refetchUser } from "../../reducers/user.reducer";
 
 export function CreateProjectForm() {
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
 
   const {
     register,
@@ -43,6 +46,7 @@ export function CreateProjectForm() {
       onSuccess: () => {
         reset();
         setOpen(false);
+        refetchUser(dispatch);
       },
       onError: (error) => {
         console.error("Create project failed:", error);

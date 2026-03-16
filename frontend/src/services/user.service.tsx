@@ -9,7 +9,7 @@ export const getAllUsers = async () => {
     const result = await axios.get(baseUrl, { headers: getAuthHeader() });
     return result.data;
   } catch (error: any) {
-    toast.error(`${error.response.data.error}`);
+    toast.error(`${JSON.stringify(JSON.stringify(error.response.data.error))}`);
     throw new Error("Failed to fetch users");
   }
 };
@@ -21,15 +21,12 @@ export const getUserById = async (id: string) => {
     });
     return result.data;
   } catch (error: any) {
-    toast.error(`${error.response.data.error}`);
+    toast.error(`${JSON.stringify(error.response.data.error)}`);
     throw new Error("Failed to fetch user");
   }
 };
 
-export const updateProfile = async (
-  id: string,
-  data: Partial<{ username: string; email: string; bio: string }>,
-) => {
+export const updateProfile = async (id: string, data: { username: string }) => {
   try {
     const result = await axios.patch(`${baseUrl}/${id}`, data, {
       headers: getAuthHeader(),
@@ -37,7 +34,7 @@ export const updateProfile = async (
     toast.success("Profile updated successfully");
     return result.data;
   } catch (error: any) {
-    toast.error(`${error.response.data.error}`);
+    toast.error(`${JSON.stringify(error.response.data.error)}`);
     throw new Error("Failed to update profile");
   }
 };

@@ -16,12 +16,23 @@ import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import { useAppSelector } from "../../hooks/use-app-selector";
 import { useState } from "react";
+import { updateProfile } from "../../services/user.service";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../reducers/user.reducer";
 
 function Profile() {
   const user = useAppSelector((root) => root.user);
+  const dispatch = useDispatch();
   const [username, setUsername] = useState<string>(user?.username || "");
   if (!user) return null;
 
+  const handleUserChange = async () => {
+    const updatedUser = await updateProfile(user.id, { username });
+    dispatch(setUser(updatedUser));
+  };
+  const completedTasks = user.assignedTasks.filter(
+    (tasks) => tasks.isDone === true,
+  );
   return (
     <div className="p-6 space-y-6">
       <div>
@@ -75,12 +86,17 @@ function Profile() {
               <Input defaultValue={user.role} />
             </div> */}
 
-            <Button disabled={user.username === username}>Save Changes</Button>
+            <Button
+              disabled={user.username === username}
+              onClick={handleUserChange}
+            >
+              Save Changes
+            </Button>
           </CardContent>
         </Card>
       </div>
 
-      <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader>
             <CardTitle className="text-sm text-muted-foreground">
@@ -89,7 +105,21 @@ function Profile() {
           </CardHeader>
 
           <CardContent>
-            <p className="text-2xl font-bold">{user.projects}</p>
+            <p className="text-2xl font-bold">{user.projects.length || 0}</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm text-muted-foreground">
+              Participating Projects
+            </CardTitle>
+          </CardHeader>
+
+          <CardContent>
+            <p className="text-2xl font-bold">
+              {user.participatingProjects.length || 0}
+            </p>
           </CardContent>
         </Card>
 
@@ -101,7 +131,7 @@ function Profile() {
           </CardHeader>
 
           <CardContent>
-            <p className="text-2xl font-bold">{user.assignedTasks}</p>
+            <p className="text-2xl font-bold">{completedTasks.length || 0}</p>
           </CardContent>
         </Card>
       </div>

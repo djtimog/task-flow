@@ -11,7 +11,7 @@ export const registerUser = async (data: RegisterValues) => {
     toast.success("Account created successfully");
     return result.data;
   } catch (error: any) {
-    toast.error(`${error.response.data.error}`);
+    toast.error(`${JSON.stringify(error.response.data.error)}`);
     throw new Error("Registration failed");
   }
 };
@@ -24,7 +24,7 @@ export const registerConfirmEmail = async (token: string) => {
     toast.success("Email confirmed successfully");
     return result.data;
   } catch (error: any) {
-    toast.error(`${error.response.data.error}`);
+    toast.error(`${JSON.stringify(error.response.data.error)}`);
     throw new Error("Email confirmation failed");
   }
 };
@@ -36,7 +36,7 @@ export const loginUser = async (data: LoginValues) => {
     toast.success(`Logged in successfully via ${method}`);
     return result.data;
   } catch (error: any) {
-    toast.error(`${error.response.data.error}`);
+    toast.error(`${JSON.stringify(error.response.data.error)}`);
     throw new Error("Login failed");
   }
 };
@@ -49,7 +49,7 @@ export const logoutUser = async () => {
     toast.success("Logged out successfully");
     return result.data;
   } catch (error: any) {
-    toast.error(`${error.response.data.error}`);
+    toast.error(`${JSON.stringify(error.response.data.error)}`);
     throw new Error("Logout failed");
   }
 };
@@ -59,7 +59,7 @@ export const refetchToken = async () => {
     const result = await axios.post(`${baseUrl}/refetchToken`);
     return result.data;
   } catch (error: any) {
-    toast.error(`${error.response.data.error}`);
+    toast.error(`${JSON.stringify(error.response.data.error)}`);
     throw new Error("Token refresh failed");
   }
 };
@@ -70,7 +70,7 @@ export const forgetPassword = async (email: string) => {
     toast.success("Password reset email sent");
     return result.data;
   } catch (error: any) {
-    toast.error(`${error.response.data.error}`);
+    toast.error(`${JSON.stringify(error.response.data.error)}`);
     throw new Error("Forgot password failed");
   }
 };
@@ -83,7 +83,7 @@ export const resetPassword = async (token: string, password: string) => {
     toast.success("Password reset successfully");
     return result.data;
   } catch (error: any) {
-    toast.error(`${error.response.data.error}`);
+    toast.error(`${JSON.stringify(error.response.data.error)}`);
     throw new Error("Password reset failed");
   }
 };

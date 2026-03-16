@@ -42,17 +42,17 @@ const removeUser = (dispatch: AppDispatch) => {
   dispatch(clearUser());
 };
 
-const refetchUser = async (user: UserType | null, dispatch: AppDispatch) => {
-  const tokenUser = user;
+const refetchUser = async (dispatch: AppDispatch) => {
+  const tokenUser = userExtractor();
   if (tokenUser) {
     const user: UserType = await getUserById(tokenUser.id);
 
     if (JSON.stringify(user) === JSON.stringify(tokenUser)) return null;
 
-    dispatch({ type: "User/setUser", payload: user });
+    dispatch(setUser(user));
   }
 };
 
-export { initializeUser, getUser, removeUser, refetchUser };
+export { setUser, initializeUser, getUser, removeUser, refetchUser };
 
 export default userSlice.reducer;

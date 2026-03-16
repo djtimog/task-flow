@@ -2,6 +2,9 @@ import Project from "../models/project.model.js";
 import { getToken, getUserByBody, getUserByToken } from "../lib/userHelper.js";
 import { BASE_HREF } from "../lib/config.js";
 import { sendInvitationLink } from "../lib/transporter.js";
+import User from "../models/user.model.js";
+import Comment from "../models/comment.model.js";
+import Task from "../models/task.model.js";
 
 const baseUrl = `${BASE_HREF}/projects`;
 
@@ -16,7 +19,7 @@ const createProject = async (req, res) => {
 
     await savedProject.populate("creator");
     await savedProject.populate("tasks");
-    await savedProject.populate("member");
+    await savedProject.populate("members");
     await savedProject.populate("comments");
     res.status(201).json({ message: "Project created", data: savedProject });
   } catch (error) {
@@ -32,7 +35,7 @@ const getAllUserProjects = async (req, res) => {
     );
     await projects.populate("creator");
     await projects.populate("tasks");
-    await projects.populate("member");
+    await projects.populate("members");
     await projects.populate("comments");
     res.status(200).json({ data: projects });
   } catch (error) {
@@ -48,7 +51,7 @@ const getProjectById = async (req, res) => {
     }
     await project.populate("creator");
     await project.populate("tasks");
-    await project.populate("member");
+    await project.populate("members");
     await project.populate("comments");
     res.status(200).json({ data: project });
   } catch (error) {
@@ -61,7 +64,7 @@ const getProjects = async (req, res) => {
     const projects = await Project.find().populate("creator");
     await projects.populate("creator");
     await projects.populate("tasks");
-    await projects.populate("member");
+    await projects.populate("members");
     await projects.populate("comments");
     res.status(200).json({ data: projects });
   } catch (error) {
@@ -84,7 +87,7 @@ const editProject = async (req, res) => {
     const updatedProject = await project.save();
     await updatedProject.populate("creator");
     await updatedProject.populate("tasks");
-    await updatedProject.populate("member");
+    await updatedProject.populate("members");
     await updatedProject.populate("comments");
     res.status(200).json({ message: "Project updated", data: updatedProject });
   } catch (error) {
@@ -100,9 +103,18 @@ const deleteProject = async (req, res) => {
       return res.status(403).json({ error: "Unauthorized" });
     }
 
-    await Project.findByIdAndDelete(id);
+    await Comment.deleteMany({ project: project._id });
+    await Task.deleteMany({ project: project._id });
+
+    await User.updateMany(
+      { participatingProjects: project._id },
+      { $pull: { participatingProjects: project._id } },
+    );
+
+    await Project.findByIdAndDelete(project.id);
+
     user.projects = user.projects.filter(
-      (proj) => proj === project.creator._id,
+      (proj) => proj !== project.creator._id,
     );
     await user.save();
 
