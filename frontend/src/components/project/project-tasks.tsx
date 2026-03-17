@@ -1,17 +1,18 @@
-import type { ProjectType } from "../../lib/type";
-import { Avatar, AvatarFallback } from "../ui/avatar";
-import { Button } from "../ui/button";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { ProjectType, TaskType } from "../../lib/type";
+import { updateTaskStatus } from "../../services/project.service";
+import { UserAvatar } from "../ui/avatar";
+import { Checkbox } from "../ui/checkbox";
+import { CreateTaskForm } from "./create-task";
+import { Loader2 } from "lucide-react";
+import { useUser } from "../../providers/dashboard-provider";
 
 export default function ProjectTasks({ project }: { project: ProjectType }) {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-sm font-medium text-gray-700">TaskList</h2>
-        {project.tasks.length > 0 && (
-          <Button className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">
-            + Add task
-          </Button>
-        )}
+        <h2 className="text-sm font-medium text-muted-foreground">TaskList</h2>
+        {project.tasks.length > 0 && <CreateTaskForm project={project} />}
       </div>
 
       {project.tasks.length === 0 ? (
@@ -24,88 +25,46 @@ export default function ProjectTasks({ project }: { project: ProjectType }) {
               fill="none"
               stroke="currentColor"
               strokeWidth="1.5"
-              className="text-gray-500"
+              className="text-muted-foreground"
             >
               <path d="M9 11l3 3L22 4" />
               <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
             </svg>
           </div>
           <div>
-            <p className="text-sm font-medium text-gray-800">No tasks yet</p>
-            <p className="text-xs text-gray-500 mt-1 max-w-55">
+            <p className="text-sm font-medium text-muted-foreground">
+              No tasks yet
+            </p>
+            <p className="text-xs text-muted-foreground mt-1 max-w-55">
               Break your project into actionable tasks for the team.
             </p>
           </div>
-          <Button className="mt-1 px-4 py-2 text-sm font-medium rounded-lg bg-gray-900 text-white hover:bg-gray-700 transition-colors">
-            + Create first task
-          </Button>
+          <CreateTaskForm project={project} />
         </div>
       ) : (
         <div className="border border-gray-200 rounded-xl overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="border-b border-gray-200">
               <tr>
                 <th className="w-10 px-3 py-2.5" />
-                <th className="px-3 py-2.5 text-left text-xs font-medium text-gray-500">
+                <th className="px-3 py-2.5 text-left text-xs font-medium text-muted-foreground">
                   Task
                 </th>
-                <th className="px-3 py-2.5 text-left text-xs font-medium text-gray-500 w-32">
+                <th className="px-3 py-2.5 text-left text-xs font-medium text-muted-foreground w-32">
                   Assigned to
                 </th>
-                <th className="px-3 py-2.5 text-left text-xs font-medium text-gray-500 w-24">
+                <th className="px-3 py-2.5 text-left text-xs font-medium text-muted-foreground w-24">
                   Status
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-100">
-              {project.tasks.map((task, i) => (
-                <tr key={i} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-3 py-3">
-                    <input
-                      type="checkbox"
-                      checked={task.isDone}
-                      // onChange={(e) => onToggle(i, e.target.checked)}
-                      placeholder={`${task.title} task`}
-                      className="w-4 h-4 rounded accent-gray-900 cursor-pointer"
-                    />
-                  </td>
-                  <td className="px-3 py-3">
-                    <p
-                      className={`font-medium leading-tight ${task.isDone ? "line-through text-gray-400" : "text-gray-900"}`}
-                    >
-                      {task.title}
-                    </p>
-                    <p className="text-xs text-gray-400 mt-0.5 truncate max-w-65">
-                      {task.description}
-                    </p>
-                  </td>
-                  <td className="px-3 py-3">
-                    <div className="flex items-center gap-1.5">
-                      <Avatar size="sm">
-                        <AvatarFallback>
-                          {task.assignedTo.username.slice(0, 2)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span className="text-xs text-gray-600 truncate">
-                        {task.assignedTo.username.split(" ")[0]}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="px-3 py-3">
-                    <span
-                      className={`inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full font-medium ${
-                        task.isDone
-                          ? "bg-green-100 text-green-800"
-                          : "bg-gray-100 text-gray-600"
-                      }`}
-                    >
-                      <span
-                        className={`w-1.5 h-1.5 rounded-full ${task.isDone ? "bg-green-500" : "bg-gray-400"}`}
-                      />
-                      {task.isDone ? "Done" : "To do"}
-                    </span>
-                  </td>
-                </tr>
+            <tbody className=" divide-y divide-gray-100">
+              {[...project.tasks].reverse().map((task) => (
+                <TableContent
+                  task={task}
+                  key={task.id}
+                  projectId={project.id}
+                />
               ))}
             </tbody>
           </table>
@@ -114,3 +73,80 @@ export default function ProjectTasks({ project }: { project: ProjectType }) {
     </div>
   );
 }
+
+const TableContent = ({
+  projectId,
+  task,
+}: {
+  projectId: string;
+  task: TaskType;
+}) => {
+  const user = useUser();
+
+  const queryClient = useQueryClient();
+
+  const changeMutation = useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: boolean }) =>
+      await updateTaskStatus(projectId, { taskId: id, isDone: !status }),
+  });
+
+  const changeCheck = async (id: string, status: boolean) => {
+    changeMutation.mutate(
+      { id, status },
+      {
+        onSuccess: () => {
+          queryClient.refetchQueries({ queryKey: ["Project"] });
+          queryClient.refetchQueries({ queryKey: ["User"] });
+        },
+      },
+    );
+  };
+
+  return (
+    <tr>
+      <td className="px-3 py-3">
+        {task.assignedTo.email == user.email &&
+          (!changeMutation.isPending ? (
+            <Checkbox
+              checked={task.isDone}
+              onCheckedChange={async () =>
+                await changeCheck(task.id, task.isDone)
+              }
+            />
+          ) : (
+            <Loader2 className="animate-spin repeat-infinite" size={12} />
+          ))}
+      </td>
+      <td className="px-3 py-3">
+        <p
+          className={`font-medium leading-tight ${task.isDone && "line-through text-gray-400"}`}
+        >
+          {task.title}
+        </p>
+        <p className="text-xs text-gray-400 mt-0.5 truncate max-w-65">
+          {task.description}
+        </p>
+      </td>
+      <td className="px-3 py-3">
+        <div className="flex items-center gap-1.5">
+          <UserAvatar username={task.assignedTo.username} size={"sm"} />
+          <span className="text-xs text-muted-foreground truncate">
+            {task.assignedTo.username.split(" ")[0]}
+          </span>
+        </div>
+      </td>
+      <td className="px-3 py-3">
+        <span
+          className={`inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full font-medium ${
+            task.isDone ? " text-green-800" : "text-foreground"
+          }`}
+        >
+          <span
+            className={`w-1.5 h-1.5 rounded-full ${task.isDone ? "bg-green-500" : "bg-gray-400"}`}
+          />
+          {task.isDone ? "Done" : "To do"}
+        </span>
+      </td>
+    </tr>
+  );
+};

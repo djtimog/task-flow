@@ -22,7 +22,11 @@ export default function TaskList({ user }: { user: UserType }) {
               className="flex justify-between border p-3 rounded-lg"
             >
               <p>{task.title}</p>
-              <Badge>{task.isDone ? "Finished" : "Pending"}</Badge>
+              <Badge
+                className={`text-black ${task.isDone ? "bg-green-500" : "bg-yellow-500"}`}
+              >
+                {task.isDone ? "Finished" : "Pending"}
+              </Badge>
             </div>
           ))
         ) : (

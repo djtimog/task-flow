@@ -5,6 +5,8 @@ import { sendInvitationLink } from "../lib/transporter.js";
 import User from "../models/user.model.js";
 import Comment from "../models/comment.model.js";
 import Task from "../models/task.model.js";
+import { populate } from "dotenv";
+import { model } from "mongoose";
 
 const baseUrl = `${BASE_HREF}/projects`;
 
@@ -18,9 +20,24 @@ const createProject = async (req, res) => {
     await user.save();
 
     await savedProject.populate("creator");
-    await savedProject.populate("tasks");
-    await savedProject.populate("members");
-    await savedProject.populate("comments");
+    await savedProject.populate({
+      path: "tasks",
+      populate: {
+        path: "assignedTo",
+        model: "User",
+      },
+    });
+    await savedProject.populate({
+      path: "members",
+      populate: {
+        path: "member",
+        model: "User",
+      },
+    });
+    await savedProject.populate({
+      path: "comments",
+      populate: { path: "creator", model: "User" },
+    });
     res.status(201).json({ message: "Project created", data: savedProject });
   } catch (error) {
     res.status(500).json({ error });
@@ -34,9 +51,24 @@ const getAllUserProjects = async (req, res) => {
       "creator",
     );
     await projects.populate("creator");
-    await projects.populate("tasks");
-    await projects.populate("members");
-    await projects.populate("comments");
+    await projects.populate({
+      path: "tasks",
+      populate: {
+        path: "assignedTo",
+        model: "User",
+      },
+    });
+    await projects.populate({
+      path: "members",
+      populate: {
+        path: "member",
+        model: "User",
+      },
+    });
+    await projects.populate({
+      path: "comments",
+      populate: { path: "creator", model: "User" },
+    });
     res.status(200).json({ data: projects });
   } catch (error) {
     res.status(500).json({ error });
@@ -50,9 +82,24 @@ const getProjectById = async (req, res) => {
       return res.status(403).json({ error: "Unauthorized" });
     }
     await project.populate("creator");
-    await project.populate("tasks");
-    await project.populate("members");
-    await project.populate("comments");
+    await project.populate({
+      path: "tasks",
+      populate: {
+        path: "assignedTo",
+        model: "User",
+      },
+    });
+    await project.populate({
+      path: "members",
+      populate: {
+        path: "member",
+        model: "User",
+      },
+    });
+    await project.populate({
+      path: "comments",
+      populate: { path: "creator", model: "User" },
+    });
     res.status(200).json({ data: project });
   } catch (error) {
     res.status(500).json({ error });
@@ -61,11 +108,27 @@ const getProjectById = async (req, res) => {
 
 const getProjects = async (req, res) => {
   try {
-    const projects = await Project.find().populate("creator");
+    const projects = await Project.find({});
     await projects.populate("creator");
-    await projects.populate("tasks");
-    await projects.populate("members");
-    await projects.populate("comments");
+    await projects.populate({
+      path: "tasks",
+      populate: {
+        path: "assignedTo",
+        model: "User",
+      },
+    });
+    console.log("i am here");
+    await projects.populate({
+      path: "members",
+      populate: {
+        path: "member",
+        model: "User",
+      },
+    });
+    await projects.populate({
+      path: "comments",
+      populate: { path: "creator", model: "User" },
+    });
     res.status(200).json({ data: projects });
   } catch (error) {
     res.status(500).json({ error });
@@ -86,9 +149,24 @@ const editProject = async (req, res) => {
 
     const updatedProject = await project.save();
     await updatedProject.populate("creator");
-    await updatedProject.populate("tasks");
-    await updatedProject.populate("members");
-    await updatedProject.populate("comments");
+    await updatedProject.populate({
+      path: "tasks",
+      populate: {
+        path: "assignedTo",
+        model: "User",
+      },
+    });
+    await updatedProject.populate({
+      path: "members",
+      populate: {
+        path: "member",
+        model: "User",
+      },
+    });
+    await updatedProject.populate({
+      path: "comments",
+      populate: { path: "creator", model: "User" },
+    });
     res.status(200).json({ message: "Project updated", data: updatedProject });
   } catch (error) {
     res.status(500).json({ error });
@@ -132,6 +210,10 @@ const inviteToProject = async (req, res) => {
       return res.status(403).json({ error: "Unauthorized" });
     }
     const invitedUser = await getUserByBody(req.body, res);
+
+    if (!invitedUser) {
+      return res.status(404).json({ error: "Invited user not found" });
+    }
 
     const members = project.members.map((member) => member.member.toString());
     if (

@@ -1,10 +1,11 @@
 import { EmptyMembers } from "./empty-members";
-import { Avatar, AvatarFallback } from "../../components/ui/avatar";
+import { UserAvatar } from "../../components/ui/avatar";
 import { useEffect, useRef, useState } from "react";
 import type { ProjectType, UserType } from "../../lib/type";
 import { Button } from "../ui/button";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { getAllUsers } from "../../services/user.service";
+import { Input } from "../ui/input";
 
 export default function ProjectMembers({ project }: { project: ProjectType }) {
   const [query, setQuery] = useState("");
@@ -23,6 +24,7 @@ export default function ProjectMembers({ project }: { project: ProjectType }) {
   const filtered = usersQuery.data.filter(
     (u) =>
       !memberIds.has(u.id) &&
+      project.creator.id != u.id &&
       (u.username.toLowerCase().includes(query.toLowerCase()) ||
         u.email.toLowerCase().includes(query.toLowerCase())),
   );
@@ -52,7 +54,9 @@ export default function ProjectMembers({ project }: { project: ProjectType }) {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-sm font-medium text-gray-700">Team members</h2>
+        <h2 className="text-sm font-medium text-muted-foreground">
+          Team members
+        </h2>
       </div>
 
       <div className="flex flex-col gap-5">
@@ -70,8 +74,8 @@ export default function ProjectMembers({ project }: { project: ProjectType }) {
               <circle cx="11" cy="11" r="8" />
               <path d="m21 21-4.35-4.35" />
             </svg>
-            <input
-              className="w-full pl-8 pr-3 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 placeholder-gray-400"
+            <Input
+              className="w-full pl-8 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 placeholder-gray-400"
               placeholder="Search users to invite…"
               value={query}
               onChange={(e) => {
@@ -85,37 +89,33 @@ export default function ProjectMembers({ project }: { project: ProjectType }) {
             />
 
             {open && query && filtered.length > 0 && (
-              <div className="absolute top-full mt-1 left-0 right-0 bg-white border border-gray-200 rounded-lg z-20 overflow-hidden shadow-sm">
+              <div className="absolute top-full mt-1 left-0 right-0 border border-gray-200 rounded-lg z-20 overflow-hidden shadow-sm">
                 {filtered.map((u) => (
                   <Button
                     key={u.id}
-                    className="w-full flex items-center gap-2.5 px-3 py-2.5 text-left hover:bg-gray-50 transition-colors"
+                    variant={"ghost"}
+                    className="w-full flex items-center gap-2.5 px-3 py-2.5 text-left transition-colors"
                     onMouseDown={() => handleSelect(u)}
                   >
-                    <Avatar size="sm">
-                      <AvatarFallback>{u.username.slice(0, 2)}</AvatarFallback>
-                    </Avatar>
+                    <UserAvatar username={u.username} size="sm" />
+
                     <div>
                       <p className="text-sm font-medium leading-tight">
-                        {u.username}
+                        {u.username.toUpperCase()}
                       </p>
-                      <p className="text-xs text-gray-500">{u.email}</p>
+                      <p className="text-xs text-muted-foreground">{u.email}</p>
                     </div>
                   </Button>
                 ))}
               </div>
             )}
             {open && query && filtered.length === 0 && (
-              <div className="absolute top-full mt-1 left-0 right-0 bg-white border border-gray-200 rounded-lg z-20 px-3 py-3 text-sm text-gray-400 shadow-sm">
+              <div className="absolute top-full mt-1 left-0 right-0 border border-gray-200 rounded-lg z-20 px-3 py-3 text-sm text-muted-foreground shadow-sm">
                 No users found
               </div>
             )}
           </div>
-          <Button
-            onClick={handleInvite}
-            disabled={!selected}
-            className="px-4 py-2 text-sm font-medium rounded-lg bg-gray-900 text-white disabled:opacity-40 disabled:cursor-not-allowed hover:bg-gray-700 transition-colors"
-          >
+          <Button onClick={handleInvite} disabled={!selected} size={"lg"}>
             Invite
           </Button>
         </div>
@@ -136,7 +136,8 @@ export default function ProjectMembers({ project }: { project: ProjectType }) {
                   key={member.id}
                   className="flex items-center gap-3 px-3 py-2.5 bg-white border border-gray-100 rounded-lg"
                 >
-                  <Avatar size="lg">{member.username.slice(0, 2)}</Avatar>
+                  <UserAvatar username={member.username} />
+
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate">
                       {member.username}

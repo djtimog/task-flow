@@ -18,11 +18,9 @@ import {
   SelectValue,
 } from "../../components/ui/select";
 import { Separator } from "../../components/ui/separator";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "../../components/ui/avatar";
+// import {
+
+// } from "../../components/ui/avatar";
 import { Badge } from "../../components/ui/badge";
 import {
   User,
@@ -127,10 +125,11 @@ export default function SettingsPage() {
                   </CardHeader>
                   <CardContent className="flex flex-col gap-5">
                     <div className="flex items-center gap-4">
-                      <Avatar className="w-16 h-16">
+                      {/* <Avatar className="w-16 h-16">
                         <AvatarImage src="" />
                         <AvatarFallback className="text-lg">DT</AvatarFallback>
-                      </Avatar>
+                      </Avatar> */}
+
                       <div className="flex flex-col gap-1">
                         <Button variant="outline" size="sm">
                           Change avatar

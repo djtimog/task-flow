@@ -1,6 +1,10 @@
 import axios from "axios";
 import { toast } from "sonner";
-import type { LoginValues, RegisterValues } from "../lib/zod-tools";
+import type {
+  ForgotPasswordValues,
+  LoginValues,
+  RegisterValues,
+} from "../lib/zod-tools";
 import { getAuthHeader } from "../lib/auth";
 
 const baseUrl = `/api/auth`;
@@ -43,7 +47,7 @@ export const loginUser = async (data: LoginValues) => {
 
 export const logoutUser = async () => {
   try {
-    const result = await axios.post(`${baseUrl}/logout`, {
+    const result = await axios.post(`${baseUrl}/logout`, undefined, {
       headers: getAuthHeader(),
     });
     toast.success("Logged out successfully");
@@ -64,10 +68,11 @@ export const refetchToken = async () => {
   }
 };
 
-export const forgetPassword = async (email: string) => {
+export const forgetPassword = async (data: ForgotPasswordValues) => {
+  const { method, ...payload } = data;
   try {
-    const result = await axios.post(`${baseUrl}/forgetPassword`, { email });
-    toast.success("Password reset email sent");
+    const result = await axios.post(`${baseUrl}/forgetPassword`, payload);
+    toast.success(`Password reset email sent to ${method}`);
     return result.data;
   } catch (error: any) {
     toast.error(`${JSON.stringify(error.response.data.error)}`);

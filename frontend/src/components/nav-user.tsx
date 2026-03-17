@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback } from "./../components/ui/avatar";
+import { UserAvatar } from "./../components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,15 +20,14 @@ import {
   ClipboardListIcon,
   BellIcon,
 } from "lucide-react";
-import { useAppSelector } from "../hooks/use-app-selector";
 import { LogOutButton } from "./dashboard/logout-buuton";
 import { Link } from "react-router-dom";
 import { route } from "../lib/routes";
+import { useUser } from "../providers/dashboard-provider";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
-  const user = useAppSelector((root) => root.user);
-  if (!user) return null;
+  const user = useUser();
 
   return (
     <SidebarMenu>
@@ -39,11 +38,7 @@ export function NavUser() {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarFallback className="rounded-lg">
-                  {user.username.slice(0, 2)}
-                </AvatarFallback>
-              </Avatar>
+              <UserAvatar username={user.username} />
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{user.username}</span>
                 <span className="truncate text-xs">{user.email}</span>
@@ -59,11 +54,8 @@ export function NavUser() {
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarFallback className="rounded-lg">
-                    {user.username.slice(0, 2)}
-                  </AvatarFallback>
-                </Avatar>
+                <UserAvatar username={user.username} />
+
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{user.username}</span>
                   <span className="truncate text-xs">{user.email}</span>

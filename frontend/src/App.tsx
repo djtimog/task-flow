@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 import LoginPage from "./pages/auth/LoginPage";
 import SignUpPage from "./pages/auth/SignUpPage";
@@ -18,9 +18,14 @@ import SettingsPage from "./pages/dashboard/settings";
 import { useQuery } from "@tanstack/react-query";
 import { useAppSelector } from "./hooks/use-app-selector";
 import AppLoader from "./components/app-loader";
+import { route } from "./lib/routes";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import ResetPassword from "./pages/auth/ResetPassword";
 
 function App() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
   const user = useAppSelector((root) => root.user);
 
   useEffect(() => {
@@ -32,12 +37,18 @@ function App() {
     queryFn: () => {
       if (user) {
         refetchUser(dispatch);
+      } else if (
+        location.pathname !== "/" &&
+        !location.pathname.startsWith("/auth")
+      ) {
+        navigate(route.auth.login);
       }
       return null;
     },
     refetchOnReconnect: true,
     refetchOnWindowFocus: true,
   });
+
   return (
     <>
       <div>
@@ -48,6 +59,11 @@ function App() {
               <Route path="/auth" element={<AuthLayout />}>
                 <Route path="login" element={<LoginPage />} />
                 <Route path="signup" element={<SignUpPage />} />
+                <Route path="forgotPassword" element={<ForgotPassword />} />
+                <Route
+                  path="resetPassword/:token"
+                  element={<ResetPassword />}
+                />
                 <Route
                   path="register/confirmEmail/:token"
                   element={<ConfirmEmailVerified />}

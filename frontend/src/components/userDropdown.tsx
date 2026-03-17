@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Avatar, AvatarFallback } from "./ui/avatar";
+import { UserAvatar } from "./ui/avatar";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
@@ -19,11 +19,7 @@ export const UserDropdown = ({ avatarName }: { avatarName: string }) => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="link">
-          <Avatar className="h-8 w-8 rounded-lg">
-            <AvatarFallback className="rounded-lg">
-              {avatarName.slice(0, 2)}
-            </AvatarFallback>
-          </Avatar>
+          <UserAvatar username={avatarName} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-40" align="start">

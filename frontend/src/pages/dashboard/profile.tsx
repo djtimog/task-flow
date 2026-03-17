@@ -6,25 +6,21 @@ import {
   CardHeader,
   CardTitle,
 } from "../../components/ui/card";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "../../components/ui/avatar";
+import { UserAvatar } from "../../components/ui/avatar";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
-import { useAppSelector } from "../../hooks/use-app-selector";
 import { useState } from "react";
 import { updateProfile } from "../../services/user.service";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../reducers/user.reducer";
+import { useUser } from "../../providers/dashboard-provider";
 
 function Profile() {
-  const user = useAppSelector((root) => root.user);
+  const user = useUser();
+
   const dispatch = useDispatch();
   const [username, setUsername] = useState<string>(user?.username || "");
-  if (!user) return null;
 
   const handleUserChange = async () => {
     const updatedUser = await updateProfile(user.id, { username });
@@ -47,10 +43,7 @@ function Profile() {
           </CardHeader>
 
           <CardContent className="flex flex-col items-center gap-4">
-            <Avatar className="h-20 w-20">
-              <AvatarImage src="/avatar.png" />
-              <AvatarFallback>{user.username.slice(0, 2)}</AvatarFallback>
-            </Avatar>
+            <UserAvatar className="h-20 w-20" username={user.username} />
 
             <div className="text-center">
               <p className="font-semibold">{user.username}</p>

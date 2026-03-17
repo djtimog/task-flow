@@ -24,7 +24,7 @@ import {
   ArrowRightIcon,
   Trash2Icon,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { deleteProject } from "../services/project.service";
 import { refetchUser } from "../reducers/user.reducer";
 import { useDispatch } from "react-redux";
@@ -48,9 +48,9 @@ export function NavProjects({ projects }: { projects: ProjectType[] }) {
         {projectsToShow.map((item) => (
           <SidebarMenuItem key={item.id}>
             <SidebarMenuButton asChild>
-              <a href={`/dashboard/projects/${item.id}`}>
+              <Link to={`/dashboard/projects/${item.id}`}>
                 <span>{item.title}</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

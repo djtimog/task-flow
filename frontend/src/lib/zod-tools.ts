@@ -33,6 +33,7 @@ const LoginUser = z.discriminatedUnion("method", [
     password: z.string(),
   }),
 ]);
+
 const CreateProject = z.object({
   title: z.string().min(3, "Title must be at least 3 characters long"),
   description: z
@@ -40,8 +41,42 @@ const CreateProject = z.object({
     .min(3, "Description must be at least 3 characters long"),
 });
 
-export const ZodSchemas = { RegisterUser, LoginUser, CreateProject };
+const CreateTask = z.object({
+  title: z.string().min(3, "Title must be at least 3 characters long"),
+  description: z
+    .string()
+    .min(3, "Description must be at least 3 characters long"),
+  member: z.string().min(3, "You must select a member"),
+});
+
+const ForgotPassword = z.discriminatedUnion("method", [
+  z.object({ method: z.literal("email"), email: z.string().email() }),
+  z.object({ method: z.literal("username"), username: z.string().min(1) }),
+]);
+
+const ResetPassword = z
+  .object({
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+export const ZodSchemas = {
+  RegisterUser,
+  LoginUser,
+  CreateProject,
+  CreateTask,
+  ForgotPassword,
+  ResetPassword,
+};
 
 export type RegisterValues = z.infer<typeof ZodSchemas.RegisterUser>;
 export type LoginValues = z.infer<typeof ZodSchemas.LoginUser>;
 export type CreateProjectValues = z.infer<typeof ZodSchemas.CreateProject>;
+export type CreateTaskValues = z.infer<typeof ZodSchemas.CreateTask>;
+export type ForgotPasswordValues = z.infer<typeof ZodSchemas.ForgotPassword>;
+
+export type ResetPasswordValues = z.infer<typeof ResetPassword>;

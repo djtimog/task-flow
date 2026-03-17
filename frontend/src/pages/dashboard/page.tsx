@@ -5,12 +5,11 @@ import ProjectList from "../../components/dashboard/project-list";
 import TaskList from "../../components/dashboard/task-list";
 import ActivityFeed from "../../components/dashboard/activity-feed";
 import { EmptyProject } from "../../components/dashboard/empty-project";
-import { useAppSelector } from "../../hooks/use-app-selector";
+import { useUser } from "../../providers/dashboard-provider";
 
 function Dashboard() {
-  const user = useAppSelector((root) => root.user);
+  const user = useUser();
 
-  if (!user) return null;
   return (
     <div className="p-6 space-y-6">
       <div>

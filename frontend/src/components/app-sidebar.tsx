@@ -16,7 +16,7 @@ import { NavUser } from "./nav-user";
 import { LayoutDashboard, User, Bell, Settings } from "lucide-react";
 import { DashboardLogo } from "./dashboard/dashboard-logo";
 import { NavProjects } from "./nav-projects";
-import { useAppSelector } from "../hooks/use-app-selector";
+import { useUser } from "../providers/dashboard-provider";
 
 const data = {
   user: {
@@ -50,8 +50,8 @@ const data = {
 };
 
 export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
-  const user = useAppSelector((root) => root.user);
-  if (!user) return null;
+  const user = useUser();
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>

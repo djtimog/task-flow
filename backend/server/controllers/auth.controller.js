@@ -69,6 +69,9 @@ const loginUser = async (req, res) => {
 
   try {
     const foundUser = await getUserByBody(req.body, res);
+    if (!foundUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
 
     if (!foundUser.verified) {
       return res.status(401).json({ error: "Email not verified" });
@@ -84,7 +87,7 @@ const loginUser = async (req, res) => {
 
     const token = getToken(foundUser);
 
-    res.status(200).json({ token });
+    return res.status(200).json({ token });
   } catch (error) {
     res.status(500).json({ error });
   }
@@ -115,6 +118,9 @@ const refetchToken = async (req, res) => {
 const forgetPassword = async (req, res) => {
   try {
     const user = await getUserByBody(req.body);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
     const token = getToken(user);
 
     const href = `${baseUrl}/resetPassword/${token}`;

@@ -4,6 +4,7 @@ export const route = {
     login: "/auth/login",
     signup: "/auth/signup",
     confirmEmail: "/auth/register/confirmEmail",
+    forgotPassword: "/auth/forgotPassword",
   },
   dashboard: {
     index: "/dashboard",

@@ -2,6 +2,7 @@ import { toast } from "sonner";
 import type { CreateProjectValues } from "../lib/zod-tools";
 import axios from "axios";
 import { getAuthHeader } from "../lib/auth";
+import type { UserType } from "../lib/type";
 
 const baseUrl = "/api/projects";
 
@@ -113,7 +114,7 @@ export const acceptInvite = async (id: string, token: string) => {
 
 export const createTask = async (
   id: string,
-  data: { title: string; description?: string },
+  data: { title: string; description?: string; assignee: Partial<UserType> },
 ) => {
   try {
     const result = await axios.post(`${baseUrl}/${id}/createTask`, data, {
@@ -127,7 +128,7 @@ export const createTask = async (
   }
 };
 
-export const createComment = async (id: string, data: { content: string }) => {
+export const createComment = async (id: string, data: { message: string }) => {
   try {
     const result = await axios.post(`${baseUrl}/${id}/createComment`, data, {
       headers: getAuthHeader(),
@@ -142,7 +143,7 @@ export const createComment = async (id: string, data: { content: string }) => {
 
 export const updateTaskStatus = async (
   id: string,
-  data: { taskId: string; status: string },
+  data: { taskId: string; isDone: boolean },
 ) => {
   try {
     const result = await axios.patch(

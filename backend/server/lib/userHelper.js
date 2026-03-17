@@ -20,9 +20,6 @@ const getUserByBody = async (body, res) => {
     foundUser = await User.findOne({ email });
   }
 
-  if (!foundUser) {
-    return res.status(404).json({ error: "User not found" });
-  }
   return foundUser;
 };
 

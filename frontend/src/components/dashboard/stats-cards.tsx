@@ -12,7 +12,10 @@ export default function StatsCards({ user }: { user: UserType }) {
   );
   const stats = [
     { title: "Total Projects", value: user.projects.length },
-    { title: "Active Tasks", value: user.assignedTasks.length },
+    {
+      title: "Active Tasks",
+      value: user.assignedTasks.length - completedTasks.length,
+    },
     { title: "Completed Tasks", value: completedTasks.length },
     {
       title: "Participating Projects",

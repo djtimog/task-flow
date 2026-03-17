@@ -19,12 +19,14 @@ export type ProjectType = {
 };
 
 export type CommentType = {
+  id: string;
   message: string;
   creator: UserType;
   project: ProjectType;
 };
 
 export type TaskType = {
+  id: string;
   title: string;
   description: string;
   assignedTo: UserType;
