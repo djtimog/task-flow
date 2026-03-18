@@ -31,9 +31,12 @@ export default function HomePage() {
           <Button variant={"outline"}>Learn more</Button>
         </div>
 
-        {/* Image placeholder */}
-        <div className="mt-10 w-full max-w-3xl rounded-xl border border-border bg-secondary/40 aspect-video flex items-center justify-center text-muted-foreground text-sm">
-          <span>Your app screenshot here</span>
+        <div className="mt-10 w-full max-w-3xl rounded-xl border border-border overflow-hidden">
+          <img
+            src="/hero.png"
+            alt="Picture of the Dashboard"
+            className="w-full"
+          />
         </div>
       </main>
       <Footer />

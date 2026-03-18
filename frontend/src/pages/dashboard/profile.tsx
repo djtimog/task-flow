@@ -74,11 +74,6 @@ function Profile() {
               </div>
             </div>
 
-            {/* <div className="space-y-2">
-              <Label>Role</Label>
-              <Input defaultValue={user.role} />
-            </div> */}
-
             <Button
               disabled={user.username === username}
               onClick={handleUserChange}

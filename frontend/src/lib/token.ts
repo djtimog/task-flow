@@ -15,6 +15,7 @@ export const userExtractor = (): UserType | undefined | null => {
     if (!exp || isExpired) {
       localStorage.clear();
       toast("User is now logged out");
+      window.location.href = "/";
       return null;
     }
 
