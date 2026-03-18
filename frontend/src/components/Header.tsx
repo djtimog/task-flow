@@ -19,56 +19,56 @@ function Header() {
           <span className="font-bold text-lg">TaskFlow</span>
         </div>
 
-        {user ? (
-          <div className="hidden sm:flex items-center gap-2">
-            <ModeToggle />
+        <div className="hidden sm:flex items-center gap-2">
+          <ModeToggle />
+          {user ? (
             <UserDropdown avatarName={user.username} />
-          </div>
-        ) : (
-          <>
-            <div className="hidden sm:flex items-center gap-2">
-              <ModeToggle />
+          ) : (
+            <>
               <Link to={route.auth.login}>
                 <Button variant="outline">Log in</Button>
               </Link>
               <Link to={route.auth.signup}>
                 <Button>Sign up</Button>
               </Link>
-            </div>
+            </>
+          )}
+        </div>
 
-            <div className="flex sm:hidden items-center gap-2">
-              <ModeToggle />
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setMenuOpen(!menuOpen)}
-              >
-                {menuOpen ? <X size={20} /> : <Menu size={20} />}
-              </Button>
-            </div>
-          </>
-        )}
+        <div className="flex sm:hidden items-center gap-2">
+          <ModeToggle />
+          {user ? (
+            <UserDropdown avatarName={user.username} />
+          ) : (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              {menuOpen ? <X size={20} /> : <Menu size={20} />}
+            </Button>
+          )}
+        </div>
       </div>
 
       {menuOpen && !user && (
         <div className="sm:hidden border-t border-border bg-background px-6 py-4 flex flex-col gap-2">
-          <Link to={route.auth.login}>
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={() => setMenuOpen(false)}
-            >
-              Log in
-            </Button>
-          </Link>
-          <Link to={route.auth.signup}>
-            <Button
-              className="w-full text-primary-foreground"
-              onClick={() => setMenuOpen(false)}
-            >
-              Sign up
-            </Button>
-          </Link>
+          <>
+            <Link to={route.auth.login}>
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => setMenuOpen(false)}
+              >
+                Log in
+              </Button>
+            </Link>
+            <Link to={route.auth.signup}>
+              <Button className="w-full" onClick={() => setMenuOpen(false)}>
+                Sign up
+              </Button>
+            </Link>
+          </>
         </div>
       )}
     </header>

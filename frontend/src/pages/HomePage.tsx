@@ -5,8 +5,18 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
 import { route } from "../lib/routes";
+import { useTheme } from "../components/theme-provider";
 
 export default function HomePage() {
+  const { theme } = useTheme();
+
+  const resolvedTheme =
+    theme === "system"
+      ? window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light"
+      : theme;
+
   return (
     <>
       <Header />
@@ -33,7 +43,9 @@ export default function HomePage() {
 
         <div className="mt-10 w-full max-w-3xl rounded-xl border border-border overflow-hidden">
           <img
-            src="/hero.png"
+            src={
+              resolvedTheme === "dark" ? "/dark-hero.png" : "/light-hero.png"
+            }
             alt="Picture of the Dashboard"
             className="w-full"
           />
