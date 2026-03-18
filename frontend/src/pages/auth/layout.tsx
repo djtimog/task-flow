@@ -1,4 +1,4 @@
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate, useSearchParams } from "react-router-dom";
 import { ModeToggle } from "../../components/ui/mode-toggle";
 import { route } from "../../lib/routes";
 import { Button } from "../../components/ui/button";
@@ -10,13 +10,15 @@ import { useAppSelector } from "../../hooks/use-app-selector";
 function AuthLayout() {
   const user = useAppSelector((root) => root.user);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || route.dashboard.index;
 
   useEffect(() => {
     if (user) {
-      navigate(route.dashboard.index);
+      navigate(redirectTo);
       toast.success("User Already Login In");
     }
-  }, [navigate, user]);
+  }, [navigate, user, redirectTo]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">

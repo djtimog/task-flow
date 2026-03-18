@@ -3,17 +3,24 @@ import { UserAvatar } from "../../components/ui/avatar";
 import { useEffect, useRef, useState } from "react";
 import type { ProjectType, UserType } from "../../lib/type";
 import { Button } from "../ui/button";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { getAllUsers } from "../../services/user.service";
 import { Input } from "../ui/input";
+import { inviteToProject } from "../../services/project.service";
+import { useUser } from "../../providers/dashboard-provider";
 
 export default function ProjectMembers({ project }: { project: ProjectType }) {
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<UserType | null>(null);
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
+  const queryClient = useQueryClient();
+  const user = useUser();
 
-  const memberIds = new Set(project.members.map((m) => m.member.id));
   const usersQuery = useSuspenseQuery<UserType[]>({
     queryKey: ["Users"],
     queryFn: async () => {
@@ -21,18 +28,30 @@ export default function ProjectMembers({ project }: { project: ProjectType }) {
     },
   });
 
+  const inviteMutation = useMutation({
+    mutationFn: async (selected: UserType) => {
+      await inviteToProject(project.id, {
+        email: selected.email,
+        username: selected.username,
+      });
+    },
+  });
+
+  const memberIds = new Set(project.members.map((m) => m.member.id));
   const filtered = usersQuery.data.filter(
     (u) =>
       !memberIds.has(u.id) &&
       project.creator.id != u.id &&
+      u.verified &&
       (u.username.toLowerCase().includes(query.toLowerCase()) ||
         u.email.toLowerCase().includes(query.toLowerCase())),
   );
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (wrapRef.current && !wrapRef.current.contains(e.target as Node))
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) {
         setOpen(false);
+      }
     }
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
@@ -44,12 +63,21 @@ export default function ProjectMembers({ project }: { project: ProjectType }) {
     setOpen(false);
   }
 
-  function handleInvite() {
+  async function handleInvite() {
     if (!selected) return;
-    // onInvite(selected);
-    setSelected(null);
-    setQuery("");
+    inviteMutation.mutate(selected, {
+      onSuccess: () => {
+        queryClient.refetchQueries({ queryKey: ["Project"] });
+        setSelected(null);
+        setQuery("");
+      },
+    });
   }
+
+  const members: {
+    member: UserType;
+    inviteStatus: boolean;
+  }[] = [...project.members, { member: project.creator, inviteStatus: true }];
 
   return (
     <div>
@@ -89,7 +117,7 @@ export default function ProjectMembers({ project }: { project: ProjectType }) {
             />
 
             {open && query && filtered.length > 0 && (
-              <div className="absolute top-full mt-1 left-0 right-0 border border-gray-200 rounded-lg z-20 overflow-hidden shadow-sm">
+              <div className="absolute bg-background top-full mt-1 left-0 right-0 border border-gray-200 rounded-lg z-20 overflow-hidden shadow-sm">
                 {filtered.map((u) => (
                   <Button
                     key={u.id}
@@ -101,22 +129,25 @@ export default function ProjectMembers({ project }: { project: ProjectType }) {
 
                     <div>
                       <p className="text-sm font-medium leading-tight">
-                        {u.username.toUpperCase()}
+                        @{u.username}
                       </p>
-                      <p className="text-xs text-muted-foreground">{u.email}</p>
                     </div>
                   </Button>
                 ))}
               </div>
             )}
             {open && query && filtered.length === 0 && (
-              <div className="absolute top-full mt-1 left-0 right-0 border border-gray-200 rounded-lg z-20 px-3 py-3 text-sm text-muted-foreground shadow-sm">
+              <div className="absolute bg-background top-full mt-1 left-0 right-0 border border-gray-200 rounded-lg z-20 px-3 py-3 text-sm text-muted-foreground shadow-sm">
                 No users found
               </div>
             )}
           </div>
-          <Button onClick={handleInvite} disabled={!selected} size={"lg"}>
-            Invite
+          <Button
+            onClick={handleInvite}
+            disabled={!selected || inviteMutation.isPending}
+            size={"lg"}
+          >
+            {inviteMutation.isPending ? "Inviting..." : "Invite"}
           </Button>
         </div>
 
@@ -124,7 +155,7 @@ export default function ProjectMembers({ project }: { project: ProjectType }) {
           <EmptyMembers />
         ) : (
           <div className="flex flex-col gap-2">
-            {project.members.map(
+            {members.map(
               ({
                 member,
                 inviteStatus,
@@ -134,17 +165,19 @@ export default function ProjectMembers({ project }: { project: ProjectType }) {
               }) => (
                 <div
                   key={member.id}
-                  className="flex items-center gap-3 px-3 py-2.5 bg-white border border-gray-100 rounded-lg"
+                  className="flex items-center gap-3 px-3 py-2.5 border border-gray-100 rounded-lg"
                 >
                   <UserAvatar username={member.username} />
 
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate">
-                      {member.username}
+                      {member.email === user.email ? "You" : member.username}
                     </p>
-                    <p className="text-xs text-gray-500 truncate">
-                      {member.email}
-                    </p>
+                    {inviteStatus && (
+                      <p className="text-xs text-gray-500 truncate">
+                        {member.email}
+                      </p>
+                    )}
                   </div>
                   <span
                     className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${

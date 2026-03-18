@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 
 import LoginPage from "./pages/auth/LoginPage";
 import SignUpPage from "./pages/auth/SignUpPage";
@@ -18,13 +18,12 @@ import SettingsPage from "./pages/dashboard/settings";
 import { useQuery } from "@tanstack/react-query";
 import { useAppSelector } from "./hooks/use-app-selector";
 import AppLoader from "./components/app-loader";
-import { route } from "./lib/routes";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
+import AcceptProjectInvite from "./pages/dashboard/acceptInvite";
 
 function App() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const location = useLocation();
   const user = useAppSelector((root) => root.user);
 
@@ -41,7 +40,9 @@ function App() {
         location.pathname !== "/" &&
         !location.pathname.startsWith("/auth")
       ) {
-        navigate(route.auth.login);
+        return (
+          <Navigate to={`/auth/login?redirect=${location.pathname}`} replace />
+        );
       }
       return null;
     },
@@ -79,6 +80,10 @@ function App() {
                 <Route path="notification" element={<NotificationsPage />} />
                 <Route path="settings" element={<SettingsPage />} />
                 <Route path="projects/:id" element={<ProjectPage />} />
+                <Route
+                  path="projects/:id/acceptInvite/:token"
+                  element={<AcceptProjectInvite />}
+                />
               </Route>
             </Routes>
           ) : (

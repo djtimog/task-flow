@@ -3,7 +3,6 @@
 import StatsCards from "../../components/dashboard/stats-cards";
 import ProjectList from "../../components/dashboard/project-list";
 import TaskList from "../../components/dashboard/task-list";
-import ActivityFeed from "../../components/dashboard/activity-feed";
 import { EmptyProject } from "../../components/dashboard/empty-project";
 import { useUser } from "../../providers/dashboard-provider";
 
@@ -19,17 +18,17 @@ function Dashboard() {
         </p>
       </div>
 
-      {user.projects.length > 0 ? (
+      {user.projects.length > 0 || user.participatingProjects.length > 0 ? (
         <>
           <StatsCards user={user} />
 
-          <div className="grid gap-6 lg:grid-cols-3">
-            <div className="lg:col-span-2 space-y-6">
-              <ProjectList user={user} />
-              <TaskList user={user} />
-            </div>
-
-            <ActivityFeed />
+          <div className="space-y-6">
+            <ProjectList title={"Recent Projects"} projects={user.projects} />
+            <ProjectList
+              title={"Participating Projects"}
+              projects={user.participatingProjects}
+            />
+            <TaskList user={user} />
           </div>
         </>
       ) : (

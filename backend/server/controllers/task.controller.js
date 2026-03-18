@@ -13,8 +13,10 @@ const createTask = async (req, res) => {
   if (project.creator.toString() !== user._id.toString()) {
     return res.status(403).json({ error: "Forbidden" });
   }
+  const members = project.members.map((member) => member.member.toString());
+
   if (
-    !project.members.includes(user._id) &&
+    !members.includes(user._id.toString()) &&
     project.creator.toString() !== user._id.toString()
   ) {
     return res

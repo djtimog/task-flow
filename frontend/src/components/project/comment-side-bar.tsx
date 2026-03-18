@@ -43,36 +43,43 @@ export function CommentsSidebar({ project }: { project: ProjectType }) {
         </span>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 py-3 flex flex-col gap-4 min-h-0">
+      <div className="flex-1 overflow-y-scroll px-4 py-3 flex flex-col gap-3 min-h-0 max-h-80">
         {list.map((c, i) => {
-          if (c.creator.email === user.email) {
+          const isMe = c.creator.email === user.email;
+
+          if (isMe) {
             return (
-              <div key={i} className="flex self-end gap-2">
-                <div className="flex flex-col items-end min-w-0">
-                  <div className="text-xs font-medium text-foreground w-max">
+              <div
+                key={i}
+                className="flex self-end items-end gap-2 max-w-[75%]"
+              >
+                <div className="flex flex-col items-end gap-1">
+                  <span className="text-[11px] text-muted-foreground px-1">
                     {c.creator.username}
+                  </span>
+                  <div className="bg-primary text-primary-foreground px-3 py-2 rounded-2xl rounded-br-sm border border-primary/20 shadow-sm">
+                    <p className="text-xs leading-relaxed wrap-break-word">
+                      {c.message}
+                    </p>
                   </div>
-                  <p className="text-xs text-foreground mt-0.5 leading-relaxed">
-                    {c.message}
-                  </p>
                 </div>
                 <UserAvatar username={c.creator.username} />
               </div>
             );
           }
+
           return (
-            <div key={i} className="flex gap-2.5">
+            <div key={i} className="flex items-end gap-2 max-w-[75%]">
               <UserAvatar username={c.creator.username} />
-              <div className="flex-1 min-w-0">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-xs font-medium text-foreground">
-                    {c.creator.username}
-                  </span>
-                  {/* <span className="text-[11px] text-gray-400">{c.time}</span> */}
+              <div className="flex flex-col gap-1">
+                <span className="text-[11px] text-muted-foreground px-1">
+                  {c.creator.username}
+                </span>
+                <div className="bg-muted px-3 py-2 rounded-2xl rounded-bl-sm border border-border shadow-sm">
+                  <p className="text-xs text-foreground leading-relaxed wrap-break-word">
+                    {c.message}
+                  </p>
                 </div>
-                <p className="text-xs text-foreground mt-0.5 leading-relaxed">
-                  {c.message}
-                </p>
               </div>
             </div>
           );

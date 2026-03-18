@@ -1,5 +1,3 @@
-"use client";
-
 import { useNavigate, useParams } from "react-router-dom";
 import ProjectHeader from "../../components/project/project-header";
 import ProjectMembers from "../../components/project/project-members";
@@ -11,6 +9,7 @@ import type { ProjectType } from "../../lib/type";
 import { Button } from "../../components/ui/button";
 import { useState } from "react";
 import { CommentsSidebar } from "../../components/project/comment-side-bar";
+import { toast } from "sonner";
 
 export default function ProjectPage() {
   const { id } = useParams();
@@ -21,8 +20,14 @@ export default function ProjectPage() {
     queryKey: ["Project", id],
     queryFn: async () => {
       if (id) {
-        const result = await getProjectById(id);
-        return result.data;
+        try {
+          const result = await getProjectById(id);
+          return result.data;
+        } catch (error) {
+          toast.error(`${error}`);
+          navigate("/dashboard");
+          throw new Error(`Error:${error}`);
+        }
       } else {
         navigate("/dashboard");
         return null;

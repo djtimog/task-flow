@@ -18,6 +18,8 @@ const getUserByBody = async (body, res) => {
     foundUser = await User.findOne({ username });
   } else if (email) {
     foundUser = await User.findOne({ email });
+  } else {
+    res.status(400).json({ error: "No body was provided" });
   }
 
   return foundUser;

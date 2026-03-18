@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
@@ -18,6 +18,9 @@ import { initializeUser } from "../../reducers/user.reducer";
 function LoginPage() {
   const [loginViaEmail, setLoginViaEmail] = useState<boolean>(true);
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || route.dashboard.index;
 
   const {
     register,
@@ -36,14 +39,12 @@ function LoginPage() {
     retry: false,
   });
 
-  const navigate = useNavigate();
-
   const onSubmit = async (data: LoginValues) => {
     loginMutation.mutate(data, {
       onSuccess: (result) => {
         const token = result.token as string;
         initializeUser(token, dispatch);
-        navigate(route.dashboard.index);
+        navigate(redirectTo);
       },
       onError: (error) => {
         console.error("Login failed:", error);

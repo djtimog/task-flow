@@ -1,6 +1,5 @@
-import { Plus } from "lucide-react";
 import type { ProjectType } from "../../lib/type";
-import { Button } from "../ui/button";
+import { CreateTaskForm } from "./create-task";
 
 export default function ProjectHeader({ project }: { project: ProjectType }) {
   return (
@@ -30,10 +29,7 @@ export default function ProjectHeader({ project }: { project: ProjectType }) {
             </span>
           </div>
         </div>
-        <Button variant={"outline"}>
-          <Plus />
-          New task
-        </Button>
+        <CreateTaskForm project={project} />
       </div>
     </header>
   );

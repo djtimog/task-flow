@@ -6,9 +6,10 @@ const createComment = async (req, res) => {
   if (!message) {
     return res.status(400).json({ error: "message is required" });
   }
+  const members = project.members.map((member) => member.member.toString());
 
   if (
-    !project.members.includes(user._id) &&
+    !members.includes(user._id.toString()) &&
     project.creator.toString() !== user._id.toString()
   ) {
     return res.status(403).json({ error: "Forbidden" });

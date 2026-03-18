@@ -5,10 +5,8 @@ import { sendInvitationLink } from "../lib/transporter.js";
 import User from "../models/user.model.js";
 import Comment from "../models/comment.model.js";
 import Task from "../models/task.model.js";
-import { populate } from "dotenv";
-import { model } from "mongoose";
 
-const baseUrl = `${BASE_HREF}/projects`;
+const baseUrl = `${BASE_HREF}/dashboard/projects`;
 
 const createProject = async (req, res) => {
   const { title, description } = req.body;
@@ -78,7 +76,12 @@ const getAllUserProjects = async (req, res) => {
 const getProjectById = async (req, res) => {
   const { user, project } = req;
   try {
-    if (project.creator._id.toString() !== user._id.toString()) {
+    const members = project.members.map((member) => member.member.toString());
+
+    if (
+      project.creator._id.toString() !== user._id.toString() &&
+      !members.includes(user._id.toString())
+    ) {
       return res.status(403).json({ error: "Unauthorized" });
     }
     await project.populate("creator");
@@ -210,7 +213,6 @@ const inviteToProject = async (req, res) => {
       return res.status(403).json({ error: "Unauthorized" });
     }
     const invitedUser = await getUserByBody(req.body, res);
-
     if (!invitedUser) {
       return res.status(404).json({ error: "Invited user not found" });
     }
@@ -229,7 +231,7 @@ const inviteToProject = async (req, res) => {
 
     const invitationToken = getToken(invitedUser, false);
 
-    const href = `${baseUrl}/${id}/acceptInvite/${invitationToken}`;
+    const href = `${baseUrl}/${project.id}/acceptInvite/${invitationToken}`;
     await sendInvitationLink(invitedUser.email, href);
     await project.save();
     res
@@ -249,6 +251,14 @@ const acceptInviteToProject = async (req, res) => {
     if (invitedUser._id.toString() !== user._id.toString()) {
       return res.status(403).json({ error: "Unauthorized" });
     }
+    const participatingProjects = user.participatingProjects.map((proj) =>
+      proj.toString(),
+    );
+
+    if (participatingProjects.includes(project._id.toString())) {
+      return res.status(400).json({ error: "Invitation accepted already" });
+    }
+
     user.participatingProjects = [...user.participatingProjects, project._id];
     await user.save();
 

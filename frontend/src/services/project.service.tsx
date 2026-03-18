@@ -82,15 +82,14 @@ export const deleteProject = async (id: string) => {
   }
 };
 
-export const inviteToProject = async (id: string, email: string) => {
+export const inviteToProject = async (
+  id: string,
+  data: { email: string; username: string },
+) => {
   try {
-    const result = await axios.post(
-      `${baseUrl}/${id}/invite`,
-      { email },
-      {
-        headers: getAuthHeader(),
-      },
-    );
+    const result = await axios.post(`${baseUrl}/${id}/invite`, data, {
+      headers: getAuthHeader(),
+    });
     toast.success("Invite sent successfully");
     return result.data;
   } catch (error: any) {
@@ -101,9 +100,13 @@ export const inviteToProject = async (id: string, email: string) => {
 
 export const acceptInvite = async (id: string, token: string) => {
   try {
-    const result = await axios.post(`${baseUrl}/${id}/acceptInvite/${token}`, {
-      headers: getAuthHeader(),
-    });
+    const result = await axios.post(
+      `${baseUrl}/${id}/acceptInvite/${token}`,
+      undefined,
+      {
+        headers: getAuthHeader(),
+      },
+    );
     toast.success("Invite accepted successfully");
     return result.data;
   } catch (error: any) {
