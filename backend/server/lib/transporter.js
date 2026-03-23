@@ -11,57 +11,228 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const sendEmail = async ({
-  receiver,
-  subject,
-  text,
+const buildEmailTemplate = ({
   title,
-  href,
+  subtitle,
+  bodyText,
   buttonText,
-}) => {
+  href,
+  footerNote,
+}) => `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>${title}</title>
+</head>
+<body style="margin:0; padding:0; background-color:#0f0f13; font-family:'Segoe UI', Helvetica, Arial, sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding: 48px 16px;">
+    <tr>
+      <td align="center">
+        <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px; width:100%;">
+
+          <!-- Logo / Brand Header -->
+          <tr>
+            <td align="center" style="padding-bottom: 32px;">
+              <table cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="
+                    background: linear-gradient(135deg, #6c63ff, #3ecfcf);
+                    border-radius: 14px;
+                    padding: 10px 20px;
+                  ">
+                    <span style="
+                      font-size: 15px;
+                      font-weight: 700;
+                      color: #ffffff;
+                      letter-spacing: 1.5px;
+                      text-transform: uppercase;
+                    ">⬡ Task Flow</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Card -->
+          <tr>
+            <td style="
+              background-color: #16161f;
+              border-radius: 20px;
+              border: 1px solid #2a2a38;
+              overflow: hidden;
+            ">
+              <!-- Top accent bar -->
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="
+                    height: 4px;
+                    background: linear-gradient(90deg, #6c63ff, #3ecfcf, #6c63ff);
+                    background-size: 200% 100%;
+                  "></td>
+                </tr>
+              </table>
+
+              <!-- Card body -->
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="padding: 48px 44px 40px;">
+
+                    <!-- Title -->
+                    <p style="
+                      margin: 0 0 8px 0;
+                      font-size: 26px;
+                      font-weight: 700;
+                      color: #f0f0f8;
+                      line-height: 1.2;
+                      letter-spacing: -0.3px;
+                    ">${title}</p>
+
+                    <!-- Subtitle -->
+                    <p style="
+                      margin: 0 0 28px 0;
+                      font-size: 14px;
+                      font-weight: 600;
+                      color: #6c63ff;
+                      text-transform: uppercase;
+                      letter-spacing: 1.2px;
+                    ">${subtitle}</p>
+
+                    <!-- Divider -->
+                    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 28px;">
+                      <tr>
+                        <td style="height:1px; background-color:#2a2a38;"></td>
+                      </tr>
+                    </table>
+
+                    <!-- Body text -->
+                    <p style="
+                      margin: 0 0 36px 0;
+                      font-size: 15px;
+                      line-height: 1.7;
+                      color: #9090a8;
+                    ">${bodyText}</p>
+
+                    <!-- CTA Button -->
+                    <table cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="
+                          background: linear-gradient(135deg, #6c63ff, #5a54e8);
+                          border-radius: 10px;
+                          box-shadow: 0 4px 24px rgba(108,99,255,0.35);
+                        ">
+                          <a href="${href}" style="
+                            display: inline-block;
+                            padding: 14px 32px;
+                            font-size: 14px;
+                            font-weight: 700;
+                            color: #ffffff;
+                            text-decoration: none;
+                            letter-spacing: 0.5px;
+                            border-radius: 10px;
+                          ">${buttonText} →</a>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- Security note -->
+                    <p style="
+                      margin: 32px 0 0 0;
+                      font-size: 12px;
+                      color: #55556a;
+                      line-height: 1.6;
+                    ">
+                      🔒 ${footerNote}<br/>
+                      If you didn't request this, you can safely ignore this email.
+                    </p>
+
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td align="center" style="padding-top: 28px;">
+              <p style="
+                margin: 0;
+                font-size: 12px;
+                color: #3a3a50;
+                line-height: 1.6;
+              ">
+                © ${new Date().getFullYear()} Task Flow App. All rights reserved.<br/>
+                This is an automated message, please do not reply.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+`;
+
+const sendEmail = async ({ receiver, subject, plainText, templateOptions }) => {
   await transporter.sendMail({
-    from: `"Task Flow App" <${NODEMAILER_USER}>`,
+    from: `"Task Flow" <${NODEMAILER_USER}>`,
     to: receiver,
     subject,
-    text,
-    html: `<div> 
-              <h2> ${title} </h2>
-              <a href="${href}">
-                <button>${buttonText}</button>
-              </a>  
-            </div>`,
+    text: plainText,
+    html: buildEmailTemplate(templateOptions),
   });
 };
 
 export const sendVerificationEmail = async (receiver, href) => {
   await sendEmail({
     receiver,
-    href,
-    subject: "Registration Confirm Email",
-    text: "Email verification from Task Flow App",
-    title: "Click on the button below to verify email",
-    buttonText: "confirm email",
+    subject: "Verify your Task Flow account",
+    plainText:
+      "Please verify your email address to activate your Task Flow account.",
+    templateOptions: {
+      title: "Confirm your email address",
+      subtitle: "Account Verification",
+      bodyText:
+        "Thanks for signing up for Task Flow! To get started, we just need to verify your email address. Click the button below — this link will expire in 24 hours.",
+      buttonText: "Verify Email Address",
+      href,
+      footerNote: "This verification link is valid for 24 hours.",
+    },
   });
 };
 
 export const sendForgetPasswordEmail = async (receiver, href) => {
   await sendEmail({
     receiver,
-    href,
-    subject: "Reset Password Link",
-    text: "Reset Passwor from Task Flow App",
-    title: "Click on the button below to reset password",
-    buttonText: "reset password",
+    subject: "Reset your Task Flow password",
+    plainText: "You requested a password reset for your Task Flow account.",
+    templateOptions: {
+      title: "Reset your password",
+      subtitle: "Password Reset Request",
+      bodyText:
+        "We received a request to reset the password for your Task Flow account. Click the button below to choose a new password. This link will expire in 1 hour for your security.",
+      buttonText: "Reset My Password",
+      href,
+      footerNote: "This password reset link expires in 1 hour.",
+    },
   });
 };
 
-export const sendInvitationLink = async (receiver, href) => {
+export const sendInvitationLink = async (receiver, href, projectName) => {
   await sendEmail({
     receiver,
-    href,
-    subject: "Project Invitation Link",
-    text: "invitation to project from Task Flow App ",
-    title: "Click on the button to accept invite",
-    buttonText: "Accept Invite",
+    subject: `You've been invited to ${projectName} on Task Flow`,
+    plainText: `You have been invited to collaborate on ${projectName} via Task Flow.`,
+    templateOptions: {
+      title: `You're invited to collaborate`,
+      subtitle: `Project Invitation: ${projectName}`,
+      bodyText: `Someone has invited you to join <strong style="color:#f0f0f8;">${projectName}</strong> on Task Flow. Accept the invitation below to start collaborating with your team.`,
+      buttonText: "Accept Invitation",
+      href,
+      footerNote: "This invitation was sent on behalf of a Task Flow user.",
+    },
   });
 };

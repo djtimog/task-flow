@@ -12,7 +12,7 @@ export default function HomePage() {
 
   const resolvedTheme =
     theme === "system"
-      ? window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? matchMedia("(prefers-color-scheme: dark)").matches
         ? "dark"
         : "light"
       : theme;
@@ -29,7 +29,7 @@ export default function HomePage() {
 
         <p className="text-muted-foreground text-lg max-w-xl leading-relaxed">
           TaskFlow helps your team organize tasks, track progress, and ship
-          faster all in one clean, focused workspace.
+          faster. All in one clean, focused workspace.
         </p>
 
         <div className="flex items-center gap-3 mt-2">

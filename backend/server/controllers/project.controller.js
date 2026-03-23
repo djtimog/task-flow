@@ -232,7 +232,7 @@ const inviteToProject = async (req, res) => {
     const invitationToken = getToken(invitedUser, false);
 
     const href = `${baseUrl}/${project.id}/acceptInvite/${invitationToken}`;
-    await sendInvitationLink(invitedUser.email, href);
+    await sendInvitationLink(invitedUser.email, href, project.title);
     await project.save();
     res
       .status(200)
