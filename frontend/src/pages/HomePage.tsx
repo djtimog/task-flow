@@ -29,7 +29,7 @@ export default function HomePage() {
 
         <p className="text-muted-foreground text-lg max-w-xl leading-relaxed">
           TaskFlow helps your team organize tasks, track progress, and ship
-          faster — all in one clean, focused workspace.
+          faster all in one clean, focused workspace.
         </p>
 
         <div className="flex items-center gap-3 mt-2">
