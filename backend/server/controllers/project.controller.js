@@ -45,28 +45,8 @@ const createProject = async (req, res) => {
 const getAllUserProjects = async (req, res) => {
   const user = req.user;
   try {
-    const projects = await Project.find({ creator: user._id }).populate(
-      "creator",
-    );
-    await projects.populate("creator");
-    await projects.populate({
-      path: "tasks",
-      populate: {
-        path: "assignedTo",
-        model: "User",
-      },
-    });
-    await projects.populate({
-      path: "members",
-      populate: {
-        path: "member",
-        model: "User",
-      },
-    });
-    await projects.populate({
-      path: "comments",
-      populate: { path: "creator", model: "User" },
-    });
+    const projects = await Project.find({ creator: user._id });
+
     res.status(200).json({ data: projects });
   } catch (error) {
     res.status(500).json({ error });
@@ -120,7 +100,6 @@ const getProjects = async (req, res) => {
         model: "User",
       },
     });
-    console.log("i am here");
     await projects.populate({
       path: "members",
       populate: {
@@ -199,7 +178,7 @@ const deleteProject = async (req, res) => {
     );
     await user.save();
 
-    res.status(200).json({ message: "Project deleted" });
+    res.status(204);
   } catch (error) {
     res.status(500).json({ error });
   }

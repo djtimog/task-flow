@@ -196,10 +196,10 @@ export const sendVerificationEmail = async (receiver, href) => {
       title: "Confirm your email address",
       subtitle: "Account Verification",
       bodyText:
-        "Thanks for signing up for Task Flow! To get started, we just need to verify your email address. Click the button below — this link will expire in 24 hours.",
+        "Thanks for signing up for Task Flow! To get started, we just need to verify your email address. Click the button below.",
       buttonText: "Verify Email Address",
       href,
-      footerNote: "This verification link is valid for 24 hours.",
+      footerNote: "This verification link is valid forever",
     },
   });
 };
@@ -213,10 +213,10 @@ export const sendForgetPasswordEmail = async (receiver, href) => {
       title: "Reset your password",
       subtitle: "Password Reset Request",
       bodyText:
-        "We received a request to reset the password for your Task Flow account. Click the button below to choose a new password. This link will expire in 1 hour for your security.",
+        "We received a request to reset the password for your Task Flow account. Click the button below to choose a new password. This link will expire in 24 hours for your security.",
       buttonText: "Reset My Password",
       href,
-      footerNote: "This password reset link expires in 1 hour.",
+      footerNote: "This password reset link expires in 24 hours.",
     },
   });
 };

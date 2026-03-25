@@ -25,7 +25,7 @@ const createComment = async (req, res) => {
   try {
     await project.save();
     await comment.save();
-    res.status(200).json({ message: "Comment created successfully" });
+    res.status(201).json({ message: "Comment created successfully" });
   } catch (error) {
     return res
       .status(500)

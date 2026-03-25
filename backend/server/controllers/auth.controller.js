@@ -105,14 +105,17 @@ const logoutUser = async (req, res) => {
 
 const refetchToken = async (req, res) => {
   const { token } = req.body;
+  try {
+    const user = await getUserByToken(token, res);
+    await user.populate("projects");
+    await user.populate("assignedTasks");
+    await user.populate("participatingProjects");
+    const newToken = getToken(user);
 
-  const user = await getUserByToken(token, res);
-  await user.populate("projects");
-  await user.populate("assignedTasks");
-  await user.populate("participatingProjects");
-  const newToken = getToken(user);
-
-  res.status(200).json({ newToken });
+    res.status(200).json({ newToken });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 };
 
 const forgetPassword = async (req, res) => {

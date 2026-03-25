@@ -44,26 +44,37 @@ const tokenExtractor = async (req, res, next) => {
 };
 
 const userExtractor = async (req, res, next) => {
-  if (req.path !== "/api/projects") {
-    const { token } = req.body;
+  try {
+    if (req.path !== "/api/projects") {
+      const { token } = req.body;
 
-    const user = await getUserByToken(token, res);
-    req.user = user;
+      const user = await getUserByToken(token, res);
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      req.user = user;
+    }
+    next();
+  } catch (error) {
+    return res.status(500).json({ error });
   }
-  next();
 };
 
 const projectExtractor = async (req, res, next) => {
   const { id } = req.params;
-  const project = await Project.findById(id);
+  try {
+    const project = await Project.findById(id);
 
-  if (!project) {
-    return res.status(404).json({ error: "project not found" });
+    if (!project) {
+      return res.status(404).json({ error: "project not found" });
+    }
+
+    req.project = project;
+
+    next();
+  } catch (error) {
+    return res.status(500).json({ error });
   }
-
-  req.project = project;
-
-  next();
 };
 
 export { requestLogger, tokenExtractor, userExtractor, projectExtractor };

@@ -44,7 +44,7 @@ const createTask = async (req, res) => {
     await project.save();
     await task.save();
     await invitedUser.save();
-    res.status(200).json({ message: "Task created successfully" });
+    res.status(201).json({ message: "Task created successfully" });
   } catch (error) {
     return res
       .status(500)
@@ -67,7 +67,7 @@ const updateTaskStatus = async (req, res) => {
     if (task.assignedTo.toString() !== user._id.toString()) {
       return res.status(403).json({ error: "Forbidden" });
     }
-    task.isDone = isDone;
+    task.isDone = Boolean(isDone);
     await task.save();
     res.status(200).json({ message: "Task status updated successfully" });
   } catch (error) {
