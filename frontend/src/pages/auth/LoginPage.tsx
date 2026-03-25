@@ -125,7 +125,9 @@ function LoginPage() {
               )}
             </div>
             <Link to={route.auth.forgotPassword} className="text-end">
-              <Button variant={"link"}>Forget password?</Button>
+              <Button type="button" variant={"link"}>
+                Forget password?
+              </Button>
             </Link>
 
             <Button className="w-full" type="submit" disabled={isPending}>

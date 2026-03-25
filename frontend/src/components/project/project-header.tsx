@@ -12,7 +12,7 @@ export default function ProjectHeader({ project }: { project: ProjectType }) {
           <p className="text-sm text-muted-foreground mt-0.5 max-w-lg">
             {project.description}
           </p>
-          <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-muted-foreground">
             <span>
               Created by{" "}
               <span className="text-shadow-muted-foreground font-medium">
