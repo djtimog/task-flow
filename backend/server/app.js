@@ -17,6 +17,7 @@ async function main() {
   app.use(cors());
 
   app.use(requestLogger);
+
   app.use(express.static("dist"));
 
   app.use("/api/users", userRouter);
