@@ -10,6 +10,7 @@ import {
   tokenExtractor,
   userExtractor,
 } from "./lib/middlewares.js";
+import path from "path";
 
 async function main() {
   const app = express();
@@ -22,13 +23,22 @@ async function main() {
 
   app.use("/api/users", userRouter);
 
-  app.use(tokenExtractor);
-  app.use("/api/auth", authRouter);
+  const protectedRouter = express.Router();
 
-  app.use(userExtractor);
-  app.use("/api/projects", projectRouter);
+  protectedRouter.use(tokenExtractor);
+  app.use("/auth", authRouter);
+
+  protectedRouter.use(userExtractor);
+  protectedRouter.use("/projects", projectRouter);
+
+  app.use("/api", protectedRouter);
+
+  app.use((req, res) => {
+    res.sendFile(path.resolve("dist", "index.html"));
+  });
 
   await connectToDb(URI);
+
   app.listen(PORT, () => {
     console.log(`server's running on http://localhost:${PORT}`);
   });
