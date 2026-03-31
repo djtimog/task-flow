@@ -29,13 +29,6 @@ export default function ConfirmEmail() {
               Open Email App
             </a>
           </Button>
-
-          <p className="text-sm text-muted-foreground">
-            Didn't receive it?{" "}
-            <button className="text-primary font-medium underline-offset-4 hover:underline">
-              Resend email
-            </button>
-          </p>
         </CardContent>
       </Card>
     </div>
