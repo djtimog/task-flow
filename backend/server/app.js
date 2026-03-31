@@ -26,7 +26,7 @@ async function main() {
   const protectedRouter = express.Router();
 
   protectedRouter.use(tokenExtractor);
-  app.use("/auth", authRouter);
+  protectedRouter.use("/auth", authRouter);
 
   protectedRouter.use(userExtractor);
   protectedRouter.use("/projects", projectRouter);
