@@ -8,9 +8,9 @@ Live demo → https://task-flow-dpj4.onrender.com/
 
 ## Tech Stack
 
-**Frontend:** React, TypeScript, Tailwind CSS, Redux Toolkit, React Query, React Hook Form, Zod, shadcn/ui
+**Frontend<TYPESCRIPT>:** React, TypeScript, Tailwind CSS, Redux Toolkit, React Query, React Hook Form, Zod, shadcn/ui
 
-**Backend:** Node.js, Express, MongoDB, Mongoose, JWT authentication
+**Backend<JAVASCRIPT>:** Node.js, Express, MongoDB, Mongoose, JWT authentication
 
 ---
 
@@ -60,6 +60,7 @@ This project serves the frontend as static files from the Express backend. To bu
 ```bash
 cd backend
 npm run build   # builds frontend and copies dist to backend
+npm start
 ```
 
 ---
