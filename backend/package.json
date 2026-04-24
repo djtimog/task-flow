@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "build": "rm -rf dist && cd ../frontend && npm run build && cp -r dist ../backend",
+    "build": "cd ../frontend && npm install && npm run build && cp -r dist ../backend",
     "docker": "npm run build && docker compose up --build"
   },
   "keywords": [],
