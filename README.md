@@ -1,75 +1,104 @@
 # Task Flow
 
-Task Flow is a full-stack web application for managing projects and tasks.  
-It allows users to create projects, assign tasks, and track progress in a clean and organized interface.
+A full-stack project and task management app built with React and Node.js/Express.
 
-## 🚀 Features
-
-- User authentication
-- Create and manage projects
-- Task creation and tracking
-- Dashboard overview
-- Responsive UI
-
-## 🛠️ Tech Stack
-
-**Frontend:**
-- React
-- Tailwind CSS
-
-**Backend:**
-- Node.js
-- Express
-- MongoDB
-
-## ⚙️ Setup Instructions
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/djtimog/task-flow
-   cd task-flow
-2. Install dependencies:
-
-npm install
-
-Create a .env file and add your environment variables:
-
-MONGO_URI=your_mongo_uri
-JWT_SECRET=your_secret
-
-Run the development server:
-
-npm run dev
-🌐 Deployment
-
-The frontend is built and served from the backend using Express:
-
-Frontend is compiled into a dist folder
-Backend serves static files using express.static
-📌 Learning Highlights
-Built a full-stack application from scratch
-Learned how to connect frontend and backend
-Implemented authentication and API handling
-Explored deployment strategies by serving frontend from backend
-🔄 Updates
-Replaced Nodemailer with Resend (for better deployment compatibility)
-📷 Demo
-
-Live: https://task-flow-dpj4.onrender.com/
-
-📚 Future Improvements
-Email notifications for tasks
-Real-time updates
-Better UI/UX enhancements
-Search and filtering
-
-Built and maintained by Timog 🚀
-
+Live demo → https://task-flow-dpj4.onrender.com/
 
 ---
 
-## ⚡ Why this matters
-After adding this:
-- Your repo looks **10x more professional**
-- Recruiters understand your project quickly
-- Shows **communication skill** (very important)
+## Tech Stack
+
+**Frontend:** React, TypeScript, Tailwind CSS, Redux Toolkit, React Query, React Hook Form, Zod, shadcn/ui
+
+**Backend:** Node.js, Express, MongoDB, Mongoose, JWT authentication
+
+---
+
+## Getting Started
+
+### Prerequisites
+- Node.js 22+
+- MongoDB URI
+- Docker (optional)
+
+### Local Development
+
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/djtimog/task-flow
+   cd task-flow
+   ```
+
+2. Set up the backend:
+   ```bash
+   cd backend
+   cp .env.example .env   # fill in your MONGO_URI and JWT_SECRET
+   npm install
+   npm run dev
+   ```
+
+3. Set up the frontend:
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
+
+### Running with Docker
+
+```bash
+cd backend
+npm run docker
+```
+
+The app will be available at http://localhost:3003
+
+### Building for Production
+
+This project serves the frontend as static files from the Express backend. To build:
+
+```bash
+cd backend
+npm run build   # builds frontend and copies dist to backend
+```
+
+---
+
+## Features
+
+- User authentication (JWT)
+- Create and manage projects
+- Task creation and tracking
+- Dashboard overview
+- Responsive UI with dark mode support
+
+---
+
+## Project Structure
+
+```
+task-flow/
+├── backend/          # Express API + serves frontend dist
+│   ├── server/       # routes, models, controllers
+│   ├── dist/         # built frontend (generated)
+│   └── index.js
+└── frontend/         # React + Vite app
+    └── src/
+```
+
+---
+
+## Environment Variables
+
+```env
+PORT=<your_port_here>
+DATABASE_URI=<mongodb_connection_string_here>
+JWT_SECRET=<your_jwt_secret_here>
+NODEMAILER_USER=<your_nodemailer_user_here>
+NODEMAILER_PASS=<your_nodemailer_pass_here>
+BASE_HREF=<your_base_href_here>
+```
+
+---
+
+Built by [Timog](https://djtimog-portfolio.vercel.app) 🚀
