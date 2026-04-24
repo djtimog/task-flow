@@ -1,4 +1,4 @@
-# Task Flow
+# TaskFlow
 
 A full-stack project and task management app built with React and Node.js/Express.
 

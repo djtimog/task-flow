@@ -48,7 +48,7 @@ const buildEmailTemplate = ({
                       color: #ffffff;
                       letter-spacing: 1.5px;
                       text-transform: uppercase;
-                    ">⬡ Task Flow</span>
+                    ">⬡ TaskFlow</span>
                   </td>
                 </tr>
               </table>
@@ -162,7 +162,7 @@ const buildEmailTemplate = ({
                 color: #3a3a50;
                 line-height: 1.6;
               ">
-                © ${new Date().getFullYear()} Task Flow App. All rights reserved.<br/>
+                © ${new Date().getFullYear()} TaskFlow App. All rights reserved.<br/>
                 This is an automated message, please do not reply.
               </p>
             </td>
@@ -178,7 +178,7 @@ const buildEmailTemplate = ({
 
 const sendEmail = async ({ receiver, subject, plainText, templateOptions }) => {
   await transporter.sendMail({
-    from: `"Task Flow" <${NODEMAILER_USER}>`,
+    from: `"TaskFlow" <${NODEMAILER_USER}>`,
     to: receiver,
     subject,
     text: plainText,
@@ -189,14 +189,14 @@ const sendEmail = async ({ receiver, subject, plainText, templateOptions }) => {
 export const sendVerificationEmail = async (receiver, href) => {
   await sendEmail({
     receiver,
-    subject: "Verify your Task Flow account",
+    subject: "Verify your TaskFlow account",
     plainText:
-      "Please verify your email address to activate your Task Flow account.",
+      "Please verify your email address to activate your TaskFlow account.",
     templateOptions: {
       title: "Confirm your email address",
       subtitle: "Account Verification",
       bodyText:
-        "Thanks for signing up for Task Flow! To get started, we just need to verify your email address. Click the button below.",
+        "Thanks for signing up for TaskFlow! To get started, we just need to verify your email address. Click the button below.",
       buttonText: "Verify Email Address",
       href,
       footerNote: "This verification link is valid forever",
@@ -207,13 +207,13 @@ export const sendVerificationEmail = async (receiver, href) => {
 export const sendForgetPasswordEmail = async (receiver, href) => {
   await sendEmail({
     receiver,
-    subject: "Reset your Task Flow password",
-    plainText: "You requested a password reset for your Task Flow account.",
+    subject: "Reset your TaskFlow password",
+    plainText: "You requested a password reset for your TaskFlow account.",
     templateOptions: {
       title: "Reset your password",
       subtitle: "Password Reset Request",
       bodyText:
-        "We received a request to reset the password for your Task Flow account. Click the button below to choose a new password. This link will expire in 24 hours for your security.",
+        "We received a request to reset the password for your TaskFlow account. Click the button below to choose a new password. This link will expire in 24 hours for your security.",
       buttonText: "Reset My Password",
       href,
       footerNote: "This password reset link expires in 24 hours.",
@@ -224,15 +224,15 @@ export const sendForgetPasswordEmail = async (receiver, href) => {
 export const sendInvitationLink = async (receiver, href, projectName) => {
   await sendEmail({
     receiver,
-    subject: `You've been invited to ${projectName} on Task Flow`,
-    plainText: `You have been invited to collaborate on ${projectName} via Task Flow.`,
+    subject: `You've been invited to ${projectName} on TaskFlow`,
+    plainText: `You have been invited to collaborate on ${projectName} via TaskFlow.`,
     templateOptions: {
       title: `You're invited to collaborate`,
       subtitle: `Project Invitation: ${projectName}`,
-      bodyText: `Someone has invited you to join <strong style="color:#f0f0f8;">${projectName}</strong> on Task Flow. Accept the invitation below to start collaborating with your team.`,
+      bodyText: `Someone has invited you to join <strong style="color:#f0f0f8;">${projectName}</strong> on TaskFlow. Accept the invitation below to start collaborating with your team.`,
       buttonText: "Accept Invitation",
       href,
-      footerNote: "This invitation was sent on behalf of a Task Flow user.",
+      footerNote: "This invitation was sent on behalf of a TaskFlow user.",
     },
   });
 };

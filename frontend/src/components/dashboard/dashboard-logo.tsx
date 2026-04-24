@@ -16,7 +16,7 @@ export function DashboardLogo() {
               <img src="/logo.png" alt="Logo" className="h-6" />
             </div>
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-medium">Task Flow</span>
+              <span className="truncate font-medium">TaskFlow</span>
               <span className="truncate text-xs">Application</span>
             </div>
           </SidebarMenuButton>
