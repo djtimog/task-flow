@@ -95,9 +95,10 @@ task-flow/
 PORT=<your_port_here>
 DATABASE_URI=<mongodb_connection_string_here>
 JWT_SECRET=<your_jwt_secret_here>
-NODEMAILER_USER=<your_nodemailer_user_here>
-NODEMAILER_PASS=<your_nodemailer_pass_here>
+<!-- NODEMAILER_USER=<your_nodemailer_user_here>
+NODEMAILER_PASS=<your_nodemailer_pass_here> -->
 BASE_HREF=<your_base_href_here>
+RESEND_API_KEY=re_xxxxxxxxxxxxxxxxx
 ```
 
 ---

@@ -1,15 +1,7 @@
-import { NODEMAILER_PASS, NODEMAILER_USER } from "./config.js";
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
+import { RESEND_API_KEY } from "./config.js";
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true, // Use true for port 465, false for port 587
-  auth: {
-    user: NODEMAILER_USER,
-    pass: NODEMAILER_PASS,
-  },
-});
+const resend = new Resend(RESEND_API_KEY);
 
 const buildEmailTemplate = ({
   title,
@@ -79,7 +71,6 @@ const buildEmailTemplate = ({
                 <tr>
                   <td style="padding: 48px 44px 40px;">
 
-                    <!-- Title -->
                     <p style="
                       margin: 0 0 8px 0;
                       font-size: 26px;
@@ -89,7 +80,6 @@ const buildEmailTemplate = ({
                       letter-spacing: -0.3px;
                     ">${title}</p>
 
-                    <!-- Subtitle -->
                     <p style="
                       margin: 0 0 28px 0;
                       font-size: 14px;
@@ -99,14 +89,12 @@ const buildEmailTemplate = ({
                       letter-spacing: 1.2px;
                     ">${subtitle}</p>
 
-                    <!-- Divider -->
                     <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 28px;">
                       <tr>
                         <td style="height:1px; background-color:#2a2a38;"></td>
                       </tr>
                     </table>
 
-                    <!-- Body text -->
                     <p style="
                       margin: 0 0 36px 0;
                       font-size: 15px;
@@ -114,7 +102,6 @@ const buildEmailTemplate = ({
                       color: #9090a8;
                     ">${bodyText}</p>
 
-                    <!-- CTA Button -->
                     <table cellpadding="0" cellspacing="0">
                       <tr>
                         <td style="
@@ -136,7 +123,6 @@ const buildEmailTemplate = ({
                       </tr>
                     </table>
 
-                    <!-- Security note -->
                     <p style="
                       margin: 32px 0 0 0;
                       font-size: 12px;
@@ -177,13 +163,18 @@ const buildEmailTemplate = ({
 `;
 
 const sendEmail = async ({ receiver, subject, plainText, templateOptions }) => {
-  await transporter.sendMail({
-    from: `"TaskFlow" <${NODEMAILER_USER}>`,
+  const { error } = await resend.emails.send({
+    from: "TaskFlow <no-reply@djtimog.online>",
     to: receiver,
     subject,
     text: plainText,
     html: buildEmailTemplate(templateOptions),
   });
+
+  if (error) {
+    console.error("Email sending failed:", error);
+    throw new Error("Failed to send email");
+  }
 };
 
 export const sendVerificationEmail = async (receiver, href) => {
