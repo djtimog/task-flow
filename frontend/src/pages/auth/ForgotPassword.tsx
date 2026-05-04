@@ -14,6 +14,7 @@ import { toast } from "sonner";
 
 function ForgotPassword() {
   const [loginViaEmail, setLoginViaEmail] = useState<boolean>(true);
+  const [spamMsgVisible, setSpamMsgVisible] = useState<boolean>(false);
 
   const {
     register,
@@ -38,6 +39,7 @@ function ForgotPassword() {
     forgotPasswordMutation.mutate(data, {
       onSuccess: () => {
         toast.success("Reset instructions sent! Check your inbox.");
+        setSpamMsgVisible(true);
       },
       onError: (error) => {
         console.error("Forgot password failed:", error);
@@ -108,6 +110,12 @@ function ForgotPassword() {
             </Button>
           </div>
         </form>
+        {spamMsgVisible && (
+          <p className="text-sm text-muted-foreground text-center bg-muted/50 border border-border rounded-lg px-4 py-3 mt-1">
+            We sent the instructions to your email. If it's not in your inbox,
+            it might be hiding in your spam or junk folder.
+          </p>
+        )}
 
         <p className="text-center text-sm text-muted-foreground">
           Remembered your password?

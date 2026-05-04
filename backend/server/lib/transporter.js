@@ -165,6 +165,7 @@ const buildEmailTemplate = ({
 const sendEmail = async ({ receiver, subject, plainText, templateOptions }) => {
   const { error } = await resend.emails.send({
     from: "TaskFlow <no-reply@djtimog.online>",
+    reply_to: "no-reply@djtimog.online",
     to: receiver,
     subject,
     text: plainText,

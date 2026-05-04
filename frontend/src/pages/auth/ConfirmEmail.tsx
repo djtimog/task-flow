@@ -29,6 +29,10 @@ export default function ConfirmEmail() {
               Open Email App
             </a>
           </Button>
+          <p className="text-xs text-muted-foreground bg-muted/50 border border-border rounded-lg px-4 py-3 w-full">
+            Can't find the email? It might be in your spam or junk folder. Mark
+            it as "Not Spam" to receive future emails in your inbox.
+          </p>
         </CardContent>
       </Card>
     </div>

@@ -40,11 +40,12 @@ export default function ProjectMembers({ project }: { project: ProjectType }) {
   const memberIds = new Set(project.members.map((m) => m.member.id));
   const filtered = usersQuery.data.filter(
     (u) =>
+      query.length > 2 &&
       !memberIds.has(u.id) &&
       project.creator.id != u.id &&
       u.verified &&
-      (u.username.toLowerCase().includes(query.toLowerCase()) ||
-        u.email.toLowerCase().includes(query.toLowerCase())),
+      (u.username.toLowerCase().startsWith(query.toLowerCase()) ||
+        u.email.toLowerCase().startsWith(query.toLowerCase())),
   );
 
   useEffect(() => {
@@ -104,7 +105,7 @@ export default function ProjectMembers({ project }: { project: ProjectType }) {
             </svg>
             <Input
               className="w-full pl-8 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 placeholder-gray-400"
-              placeholder="Search users to invite…"
+              placeholder="Enter first three letters of name…"
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);
@@ -150,6 +151,13 @@ export default function ProjectMembers({ project }: { project: ProjectType }) {
             {inviteMutation.isPending ? "Inviting..." : "Invite"}
           </Button>
         </div>
+
+        {inviteMutation.isSuccess && (
+          <p className="text-sm text-green-700 dark:text-green-200 bg-green-50 dark:bg-green-950 border border-green-200 rounded-lg px-4 py-3">
+            Invitation sent! Let {selected?.username || "them"} know to check
+            their email including their spam folder.
+          </p>
+        )}
 
         {project.members.length === 0 ? (
           <EmptyMembers />
